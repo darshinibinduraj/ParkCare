@@ -32,8 +32,9 @@ export function SourceTabs() {
           . Those tools do not show who is taking new patients.
         </p>
         <p>
-          Local clinic cards in the demo are fictional. They are marked Simulated example. ParkCare does not invent
-          real doctors, openings, or insurance.
+          Nearby sites come from the HRSA Health Center Service Delivery and Look-Alike Sites file in{" "}
+          <span className="break-all">src/data</span>. They are real health center locations. They are not
+          movement-disorder specialists. ParkCare does not invent openings or insurance.
         </p>
       </Tabs.Content>
       <Tabs.Content value="equipment" className="grid max-w-measure gap-3">

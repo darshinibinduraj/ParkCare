@@ -65,7 +65,12 @@ export function locationMatches(
   if (!cityOrZip) return false;
   const query = cityOrZip.toLowerCase();
   const zip = query.match(/\b\d{5}\b/)?.[0];
-  if (zip && (parts.zip === zip || parts.serviceArea?.includes(zip))) return true;
+  if (
+    zip &&
+    (parts.zip.slice(0, 5) === zip || parts.serviceArea?.some((area) => area.slice(0, 5) === zip))
+  ) {
+    return true;
+  }
   const city = parts.city.toLowerCase();
   if (city && city !== "national" && query.includes(city)) return true;
   return (

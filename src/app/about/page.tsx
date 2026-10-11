@@ -18,8 +18,8 @@ export default function AboutPage() {
         <li>You answer open questions. A reader turns them into a structured summary. You can edit it.</li>
         <li>The medical, equipment, and caregiver helpers each look only at their own dataset.</li>
         <li>
-          They send those notes to each other with A2A over SLIM. A note can change the list, for example by moving a
-          balance clinic ahead of another clinic after a fall.
+          They send those notes to each other with A2A over SLIM. A note can change the list. After a fall, a
+          home-safety note can move a general community clinic ahead of a school, mobile, or shelter site.
         </li>
         <li>A final step puts the notes into one plan, with caveats and missing information.</li>
       </ol>
