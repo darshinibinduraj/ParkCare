@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Disclaimer } from "@/components/disclaimer";
+import { LogoLockup } from "@/components/logo";
 import { MainColumn } from "@/components/main-column";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -17,6 +18,7 @@ export default async function HomePage({
           Your saved answers and plan were deleted from this device.
         </p>
       ) : null}
+      <LogoLockup />
       <div className="grid max-w-measure gap-4">
         <h1 className="text-4xl font-bold">Sort out next steps for Parkinson&apos;s care</h1>
         <p className="text-lead">

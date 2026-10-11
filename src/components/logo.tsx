@@ -1,9 +1,27 @@
-export function Logo() {
+import Image from "next/image";
+
+export function LogoMark() {
   return (
-    <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true" className="shrink-0 text-primary">
-      <rect width="40" height="40" rx="12" fill="currentColor" />
-      <path d="M12 25c4-9 12-9 16 0" fill="none" stroke="var(--primary-fg)" strokeWidth="3" strokeLinecap="round" />
-      <circle cx="20" cy="15" r="3" fill="var(--primary-fg)" />
-    </svg>
+    <Image
+      src="/logo-mark.png"
+      alt=""
+      width={320}
+      height={297}
+      sizes="256px"
+      className="size-14 shrink-0 rounded-2xl bg-white object-contain p-0.5"
+    />
+  );
+}
+
+export function LogoLockup() {
+  return (
+    <Image
+      src="/logo-lockup.png"
+      alt="ParkCare. Personalized Support. A Brighter Tomorrow. For Parkinson's."
+      width={949}
+      height={854}
+      priority
+      className="h-auto w-full max-w-sm rounded-2xl bg-white p-3"
+    />
   );
 }
