@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { HelpDialog } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { LogoMark } from "@/components/logo";
 import { PreferenceControls } from "@/components/preferences";
 import type { TextSizeName, ThemeName } from "@/lib/theme";
@@ -13,7 +14,12 @@ export function SiteHeader({ theme, textSize }: { theme: ThemeName; textSize: Te
             <LogoMark />
             ParkCare
           </Link>
-          <HelpDialog />
+          <div className="flex flex-wrap items-center gap-4">
+            <Button asChild variant="secondary">
+              <Link href="/">Home</Link>
+            </Button>
+            <HelpDialog />
+          </div>
         </div>
         <div className="flex flex-wrap items-center gap-4">
           <PreferenceControls initialTheme={theme} initialTextSize={textSize} />
