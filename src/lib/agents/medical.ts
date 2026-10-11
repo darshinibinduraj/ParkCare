@@ -95,9 +95,40 @@ export function runMedicalAgent(profile: PatientProfile, resources: MedicalResou
   });
 }
 
-export function refineMedical(own: Findings, others: Findings[], profile: PatientProfile): Findings {
+export function refineMedical(
+  own: Findings,
+  others: Findings[],
+  profile: PatientProfile,
+  resources: MedicalResource[] = [],
+): Findings {
   const heard = others.flatMap((agent) => agent.keyFindings).join(" ");
   const flags = [...own.flagsForOtherAgents];
+  const equipment = others.find((agent) => agent.agent === "equipment");
+  const caregiver = others.find((agent) => agent.agent === "caregiver");
+  const homeSafety = (equipment?.flagsForOtherAgents ?? []).some((flag) => /home-safety|home safety/i.test(flag.message));
+  const tightBudget = (caregiver?.flagsForOtherAgents ?? []).some((flag) => /budget is limited/i.test(flag.message));
+  let recommendations = own.recommendations;
+  if (homeSafety && tightBudget && profile.falls.reported) {
+    const byId = new Map(resources.map((resource) => [resource.id, resource]));
+    const balance = recommendations.find((item) => {
+      const resource = item.resourceId ? byId.get(item.resourceId) : undefined;
+      return /balance/i.test(resource?.specialty ?? item.title);
+    });
+    if (balance?.resourceId) {
+      const rest = recommendations.filter((item) => item.resourceId !== balance.resourceId);
+      const national = rest.filter((item) => item.resourceId && byId.get(item.resourceId)?.city === "National");
+      const local = rest.filter((item) => !(item.resourceId && byId.get(item.resourceId)?.city === "National"));
+      const next = [...national, balance, ...local];
+      const same = next.every((item, index) => item.resourceId === recommendations[index]?.resourceId);
+      if (!same && local[0]) {
+        flags.unshift({
+          to: "all",
+          message: `I moved ${balance.title} ahead of ${local[0].title} because the equipment helper said home safety matters after a fall. This is not a referral.`,
+        });
+        recommendations = next;
+      }
+    }
+  }
   if (/fall/i.test(heard) || profile.falls.reported) {
     flags.push({
       to: "equipment",
@@ -111,5 +142,5 @@ export function refineMedical(own: Findings, others: Findings[], profile: Patien
         ? "Living alone makes a check-in plan more important. I did not assess safety."
         : "Please share support options without calling them medical treatment.",
   });
-  return { ...own, flagsForOtherAgents: flags.slice(0, 8) };
+  return { ...own, recommendations, flagsForOtherAgents: flags.slice(0, 8) };
 }

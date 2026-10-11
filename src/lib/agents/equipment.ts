@@ -92,16 +92,31 @@ export function runEquipmentAgent(profile: PatientProfile, items: EquipmentItem[
   });
 }
 
-export function refineEquipment(own: Findings, others: Findings[], profile: PatientProfile): Findings {
+export function refineEquipment(
+  own: Findings,
+  others: Findings[],
+  profile: PatientProfile,
+  items: EquipmentItem[] = [],
+): Findings {
   const medical = others.find((agent) => agent.agent === "medical");
   const heard = medical?.keyFindings.join(" ") ?? "";
   const flags = [...own.flagsForOtherAgents];
+  let recommendations = own.recommendations;
   if (/fall/i.test(heard) || profile.falls.reported) {
+    const byId = new Map(items.map((item) => [item.id, item]));
+    const homeFirst = (id: string | null) => {
+      const category = id ? byId.get(id)?.category : undefined;
+      return category && category !== "mobility" ? 0 : 1;
+    };
+    const next = [...recommendations].sort((a, b) => homeFirst(a.resourceId) - homeFirst(b.resourceId));
+    const moved = next[0] && recommendations[0] && next[0].resourceId !== recommendations[0].resourceId;
     flags.push({
       to: "all",
-      message:
-        "Medical helper noted falls, or falls are in the story. I am keeping home-safety information ahead of buying a device.",
+      message: moved
+        ? `I moved ${next[0]?.title} ahead of ${recommendations[0]?.title} because the medical helper reported falls. Home safety comes before a walking device. I am not prescribing equipment.`
+        : "Medical helper noted falls, or falls are in the story. I am keeping home-safety information ahead of buying a device.",
     });
+    if (moved) recommendations = next;
   }
   if (profile.budget === "limited") {
     flags.push({
@@ -109,5 +124,5 @@ export function refineEquipment(own: Findings, others: Findings[], profile: Pati
       message: "Budget is limited. I left out higher-priced example products. A therapist can still discuss them.",
     });
   }
-  return { ...own, flagsForOtherAgents: flags.slice(0, 8) };
+  return { ...own, recommendations, flagsForOtherAgents: flags.slice(0, 8) };
 }

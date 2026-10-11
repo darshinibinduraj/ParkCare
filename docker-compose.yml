@@ -1,0 +1,8 @@
+services:
+  slim:
+    image: ghcr.io/agntcy/slim:2.3.3
+    ports:
+      - "46357:46357"
+    volumes:
+      - ./agents/slim/server-config.yaml:/config.yaml:ro
+    command: ["/slim", "--config", "/config.yaml"]

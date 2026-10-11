@@ -123,6 +123,14 @@ export const agentMessageSchema = z.object({
   recipients: z.array(z.string()).min(1),
   round: z.number().int().min(1).max(3),
   content: z.string().min(1).max(2000),
+  structured: z
+    .object({
+      transport: z.enum(["slim", "local-fallback"]),
+      added: z.array(z.string()).max(12).optional(),
+      removed: z.array(z.string()).max(12).optional(),
+    })
+    .nullable()
+    .optional(),
 });
 
 export type AgentMessage = z.infer<typeof agentMessageSchema>;

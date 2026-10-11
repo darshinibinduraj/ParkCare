@@ -30,6 +30,30 @@ pnpm lint
 pnpm typecheck
 ```
 
+## Agents over SLIM
+
+The care plan is built by a Python service in `agents/`. Three helpers (medical, equipment, caregiver) are A2A servers named `agntcy/parkcare/medical_agent`, `agntcy/parkcare/equipment_agent`, and `agntcy/parkcare/caregiver_agent`. The orchestrator sends the profile and the other helpers' findings over [SLIM](https://docs.agntcy.org/slim/overview/) using `slima2a` 0.7.1. Round 2 can change the list. For a fall, the medical helper moves the balance clinic ahead of the other local clinic after the equipment helper's home-safety note.
+
+```bash
+docker compose up slim
+python3 -m venv .venv
+. .venv/bin/activate
+pip install fastapi uvicorn 'slima2a==0.7.1' 'a2a-sdk[http-server]==1.1.0'
+cd agents
+PARKCARE_SLIM=1 SLIM_URL=http://127.0.0.1:46357 PYTHONPATH=. uvicorn app.main:app --port 8000
+```
+
+The shared secret in the local SLIM config is for development only. Do not use it with real patient data.
+
+If the SLIM node or the `slima2a` package is not available, the same Python service still returns a plan. The helpers exchange the same notes in-process, and the results page says SLIM was not used. If the Python service itself is not running, Next.js does that in-process fallback.
+
+Without SLIM, start only the service:
+
+```bash
+cd agents
+PYTHONPATH=. uvicorn app.main:app --port 8000
+```
+
 ## Optional AI key
 
 Set `LLM_API_KEY` or `ANTHROPIC_API_KEY` to send answer text to Anthropic for the summary and for explanation wording. Resource choices still come only from the dataset. With no key, a built-in planner runs on the server and no outside AI service sees the answers.

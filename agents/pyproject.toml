@@ -1,0 +1,18 @@
+[project]
+name = "parkcare-agents"
+version = "0.1.0"
+description = "ParkCare A2A agents over AGNTCY SLIM"
+requires-python = ">=3.11,<4"
+dependencies = [
+  "fastapi>=0.115",
+  "uvicorn>=0.32",
+]
+
+[project.optional-dependencies]
+slim = [
+  "slima2a==0.7.1",
+  "a2a-sdk[http-server]==1.1.0",
+]
+
+[tool.uv]
+package = false

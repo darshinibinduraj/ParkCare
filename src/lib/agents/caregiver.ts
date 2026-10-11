@@ -78,6 +78,15 @@ export function runCaregiverAgent(profile: PatientProfile, services: CaregiverSe
               ? "This person lives alone and falls were reported. In-home support is worth discussing. Availability was not checked."
               : "Support ideas are examples only. I did not confirm that anyone is available.",
       },
+      ...(profile.budget === "limited"
+        ? [
+            {
+              to: "medical" as const,
+              message:
+                "Budget is limited. Please put a lower-cost community or balance option ahead of a specialty center.",
+            },
+          ]
+        : []),
     ],
     uncertainties: [
       "Credentials, background checks, and open hours were not verified.",

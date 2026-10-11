@@ -112,18 +112,42 @@ export function ReviewForm({ initial }: { initial: PatientProfile }) {
       setStatus("Saved");
       return;
     }
-    const run = await fetch("/api/care-plan/run", {
+    const run = await fetch("/api/care-plan/stream", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: "{}",
     });
-    const result = (await run.json()) as { error?: string; sessionId?: string };
-    if (!run.ok || !result.sessionId) {
+    if (!run.ok || !run.body) {
+      const failed = (await run.json().catch(() => ({}))) as { error?: string };
       setStatus("");
-      setError(result.error ?? "The plan could not be made. Please try again.");
+      setError(failed.error ?? "The plan could not be made. Please try again.");
       return;
     }
-    window.location.assign(`/results/${result.sessionId}`);
+    const reader = run.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+    let sessionId = "";
+    for (;;) {
+      const chunk = await reader.read();
+      if (chunk.done) break;
+      buffer += decoder.decode(chunk.value, { stream: true });
+      const parts = buffer.split("\n\n");
+      buffer = parts.pop() ?? "";
+      for (const part of parts) {
+        const event = part.match(/^event: (.+)$/m)?.[1];
+        const data = part.match(/^data: (.+)$/m)?.[1] ?? "";
+        if (event === "progress") setStatus(data);
+        if (event === "result") {
+          sessionId = (JSON.parse(data) as { sessionId?: string }).sessionId ?? "";
+        }
+      }
+    }
+    if (!sessionId) {
+      setStatus("");
+      setError("The plan could not be made. Please try again.");
+      return;
+    }
+    window.location.assign(`/results/${sessionId}`);
   }
 
   const selectedSymptoms = form.watch("symptoms");

@@ -17,7 +17,10 @@ export default function AboutPage() {
       <ol className="grid max-w-measure list-decimal gap-3 pl-6">
         <li>You answer open questions. A reader turns them into a structured summary. You can edit it.</li>
         <li>The medical, equipment, and caregiver helpers each look only at their own dataset.</li>
-        <li>They read the other helpers&apos; findings and may adjust their notes.</li>
+        <li>
+          They send those notes to each other with A2A over SLIM. A note can change the list, for example by moving a
+          balance clinic ahead of another clinic after a fall.
+        </li>
         <li>A final step puts the notes into one plan, with caveats and missing information.</li>
       </ol>
       <section className="grid gap-4">

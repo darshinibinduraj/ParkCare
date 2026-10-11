@@ -54,8 +54,8 @@ export function createPlan(
   const equipment = keepKnown(runEquipmentAgent(profile, data.equipment), ids);
   const caregiver = keepKnown(runCaregiverAgent(profile, data.caregivers), ids);
 
-  const medical2 = refineMedical(medical, [equipment, caregiver], profile);
-  const equipment2 = refineEquipment(equipment, [medical, caregiver], profile);
+  const medical2 = refineMedical(medical, [equipment, caregiver], profile, data.medical);
+  const equipment2 = refineEquipment(equipment, [medical, caregiver], profile, data.equipment);
   const caregiver2 = refineCaregiver(caregiver, [medical, equipment], profile);
 
   const messages = [

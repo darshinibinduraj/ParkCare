@@ -13,9 +13,10 @@ import {
 } from "@/lib/db/schema";
 import { getDb } from "@/lib/db/client";
 import { extractProfile, hashAnswers } from "@/lib/extract";
+import { requestAgentPlan } from "@/lib/agent-client";
 import { createPlan, polishPlan } from "@/lib/agents/orchestrator";
 import type { AgentMessage, CarePlan, PatientProfile } from "@/lib/schemas";
-import { carePlanSchema, patientProfileSchema } from "@/lib/schemas";
+import { agentMessageSchema, carePlanSchema, patientProfileSchema } from "@/lib/schemas";
 import type { CaregiverService, Dataset, EquipmentItem, MedicalResource } from "@/lib/resources";
 
 const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000;
@@ -193,9 +194,14 @@ export async function runCarePlan(sessionId: string) {
   if (!saved) throw new Error("missing_profile");
   const previous = await getLatestPlan(sessionId);
   const data = await loadDataset();
-  const built = createPlan(saved.profile, data, previous);
+  const remote = await requestAgentPlan(saved.profile, data, previous);
+  const built = remote ?? { ...createPlan(saved.profile, data, previous), transport: "local-fallback" as const };
   const plan = await polishPlan(built.plan, saved.profile);
-  await saveRun(sessionId, built.messages, plan);
+  const messages = built.messages.map((message) => ({
+    ...message,
+    structured: { ...(message.structured ?? {}), transport: built.transport },
+  }));
+  await saveRun(sessionId, messages, plan);
   if (!saved.confirmed) await saveProfile(sessionId, saved.profile, true);
   return plan;
 }
@@ -221,7 +227,7 @@ async function saveRun(sessionId: string, messages: AgentMessage[], plan: CarePl
           recipients: message.recipients,
           round: message.round,
           content: message.content,
-          structured: null,
+          structured: message.structured ?? null,
           createdAt: now,
         })),
       );
@@ -350,6 +356,7 @@ export async function getPlanView(sessionId: string): Promise<PlanView | null> {
       recipients: row.recipients,
       round: row.round,
       content: row.content,
+      structured: agentMessageSchema.shape.structured.parse(row.structured),
     })),
     resources,
     profile: profileRow.profile,

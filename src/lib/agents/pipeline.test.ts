@@ -72,6 +72,20 @@ test("three fictional patients get a plan from all three helpers", () => {
   }
 });
 
+test("equipment's home-safety note moves the balance clinic ahead of the other local clinic", () => {
+  const { plan, messages } = createPlan(profileFor("falls-alone"), data, null);
+  const note = messages
+    .filter((message) => message.round === 2 && message.sender === "medical")
+    .map((message) => message.content)
+    .join(" ");
+  assert.match(note, /Barton Creek Balance Clinic/);
+  assert.match(note, /ahead of Austin Community Neurology Clinic/);
+  const titles = plan.medical.map((item) => item.title);
+  const balance = titles.indexOf("Barton Creek Balance Clinic");
+  const community = titles.indexOf("Austin Community Neurology Clinic");
+  assert.ok(balance >= 0 && community >= 0 && balance < community);
+});
+
 test("budget changes which equipment and caregiver examples appear", () => {
   const base = profileFor("falls-alone");
   const limited = createPlan(base, data, null).plan;
@@ -83,9 +97,9 @@ test("budget changes which equipment and caregiver examples appear", () => {
   assert.match(flexible.comparisonNote ?? "", /Budget changed/);
   assert.equal(titles(limited, "caregiver").includes("Hill Country Home Care"), false);
   assert.ok(titles(flexible, "caregiver").includes("Hill Country Home Care"));
-  const limitedMedical = titles(limited, "medical").find((title) => title.includes("Austin") || title.includes("Barton") || title.includes("Lone Star"));
-  const flexibleMedical = titles(flexible, "medical").find((title) => title.includes("Austin") || title.includes("Barton") || title.includes("Lone Star"));
-  assert.notEqual(limitedMedical, flexibleMedical);
+  const place = (plan: typeof limited, title: string) => titles(plan, "medical").indexOf(title);
+  assert.ok(place(limited, "Austin Community Neurology Clinic") < place(limited, "Lone Star Movement Center"));
+  assert.ok(place(flexible, "Lone Star Movement Center") < place(flexible, "Austin Community Neurology Clinic"));
 });
 
 test("a missing place does not invent local clinics", () => {
