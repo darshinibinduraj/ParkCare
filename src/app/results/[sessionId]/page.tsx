@@ -157,7 +157,7 @@ export default async function ResultsPage({ params }: { params: Promise<{ sessio
             </button>
           </form>
           <p>
-            <Link className="inline-flex min-h-14 items-center underline" href="/intake/review">
+            <Link className="inline-flex min-h-14 items-center underline" href="/intake/review?edit=1">
               Edit the full summary
             </Link>
           </p>

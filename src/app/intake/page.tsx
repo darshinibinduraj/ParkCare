@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
 import { QuestionForm } from "@/components/intake/question-form";
 import { MainColumn } from "@/components/main-column";
-import { getAnswerRows, getSession } from "@/lib/db/store";
+import { ReloadIfRestored } from "@/components/intake/reload-if-restored";
+import { getAnswerRows, getSession, sessionHasPlan } from "@/lib/db/store";
 import { isQuestionKey, questionByKey, resumeKey, splitStoredAnswer, visibleQuestions, type QuestionKey } from "@/lib/questions";
 import { readSessionCookie } from "@/lib/session";
 
@@ -17,6 +18,7 @@ export default async function IntakePage({
   const params = await searchParams;
   const cookie = await readSessionCookie();
   const session = cookie ? await getSession(cookie) : null;
+  if (session && (await sessionHasPlan(session.id))) redirect("/api/session/restart");
   const rows = session ? await getAnswerRows(session.id) : [];
   const answers: Record<string, string> = {};
   for (const row of rows) answers[row.questionKey] = row.skipped ? "" : row.answerText;
@@ -37,7 +39,9 @@ export default async function IntakePage({
 
   return (
     <MainColumn className="py-4">
+      <ReloadIfRestored />
       <QuestionForm
+        key={question.key}
         question={question}
         index={index}
         total={visible.length}

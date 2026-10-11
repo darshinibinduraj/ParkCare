@@ -17,7 +17,9 @@ test("embedded Postgres stores answers, a plan, and deletion", async () => {
   }
   const profile = await store.syncProfile(sessionId);
   await store.saveProfile(sessionId, profile, true);
+  assert.equal(await store.sessionHasPlan(sessionId), false);
   await store.runCarePlan(sessionId);
+  assert.equal(await store.sessionHasPlan(sessionId), true);
   const view = await store.getPlanView(sessionId);
   assert.ok(view);
   assert.ok(view.plan.steps.length >= 3);

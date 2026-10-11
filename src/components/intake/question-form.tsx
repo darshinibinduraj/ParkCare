@@ -25,7 +25,7 @@ export function QuestionForm({
   showReviewLink: boolean;
 }) {
   return (
-    <form id="intake-form" action="/api/intake/answer" method="post" className="grid gap-6 pb-40">
+    <form id="intake-form" action="/api/intake/answer" method="post" className="grid gap-6 pb-40" autoComplete="off">
       <FocusHeading id="question-title" />
       <Autosave questionKey={question.key} chips={question.chips} />
       <ProgressBar current={index + 1} total={total} />

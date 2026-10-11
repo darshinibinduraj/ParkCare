@@ -52,6 +52,16 @@ export async function createSession(prefs?: { textSize?: string | null; theme?: 
   return id;
 }
 
+export async function sessionHasPlan(sessionId: string): Promise<boolean> {
+  const db = await getDb();
+  const rows = await db
+    .select({ id: agentRuns.id })
+    .from(agentRuns)
+    .where(and(eq(agentRuns.sessionId, sessionId), eq(agentRuns.status, "complete")))
+    .limit(1);
+  return rows.length > 0;
+}
+
 export async function getSession(id: string) {
   const db = await getDb();
   const rows = await db.select().from(sessions).where(eq(sessions.id, id)).limit(1);
