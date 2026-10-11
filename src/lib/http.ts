@@ -20,6 +20,14 @@ export function requestIsSecure(request: Request): boolean {
   return new URL(request.url).protocol === "https:";
 }
 
+/** Keep the browser on the current host. An absolute redirect was sending the public site to localhost. */
+export function relativeRedirect(path: string, status = 303) {
+  return new NextResponse(null, {
+    status,
+    headers: { Location: path },
+  });
+}
+
 export function withSession(response: NextResponse, sessionId: string, request: Request) {
   response.cookies.set(SESSION_COOKIE, sessionId, sessionCookieOptions(requestIsSecure(request)));
   return response;

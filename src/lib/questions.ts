@@ -159,3 +159,19 @@ export function resumeKey(answers: Record<string, string>, answered: Set<string>
   if (!missing && answered.size > 0) return "review";
   return missing?.key ?? "q1";
 }
+
+/** Relative path only, so Next, Back, and Skip stay on the host the person is using. */
+export function intakeDestination(
+  current: QuestionKey,
+  answers: Record<string, string>,
+  intent: "next" | "back" | "skip",
+): string {
+  if (intent === "back") {
+    const previous = neighborKey(current, answers, "back");
+    const target = previous === "stay" || previous === "review" ? current : previous;
+    return `/intake?q=${target}&saved=1`;
+  }
+  const next = neighborKey(current, answers, "next");
+  if (next === "review") return "/intake/review";
+  return `/intake?q=${next}&saved=1`;
+}

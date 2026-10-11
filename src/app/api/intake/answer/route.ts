@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
-import { fail, jsonError, withSession } from "@/lib/http";
+import { fail, jsonError, relativeRedirect, withSession } from "@/lib/http";
 import { clientKey, rateLimit } from "@/lib/rate-limit";
 import { answerBodySchema } from "@/lib/schemas";
 import { readSessionCookie } from "@/lib/session";
 import { createSession, getAnswerMap, getSession, syncProfile, upsertAnswer } from "@/lib/db/store";
-import { combineAnswer, isQuestionKey, neighborKey, questionByKey } from "@/lib/questions";
+import { combineAnswer, intakeDestination, isQuestionKey, questionByKey, type QuestionKey } from "@/lib/questions";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -27,17 +27,23 @@ export async function POST(request: Request) {
     let questionKey = "";
     let answerText = "";
     let skipped = false;
-    let intent = "next";
+    let intent: "next" | "back" | "skip" | null = null;
 
     if (contentType.includes("application/json")) {
       const body = answerBodySchema.parse(await request.json());
       questionKey = body.questionKey;
       answerText = body.answerText;
       skipped = body.skipped;
+      intent = body.intent ?? null;
+      if (intent === "skip") {
+        skipped = true;
+        answerText = "";
+      }
     } else {
       const form = await request.formData();
       questionKey = String(form.get("questionKey") ?? "");
-      intent = String(form.get("intent") ?? "next");
+      const rawIntent = String(form.get("intent") ?? "next");
+      intent = rawIntent === "back" || rawIntent === "skip" ? rawIntent : "next";
       const typed = String(form.get("answerText") ?? "");
       const chips = form.getAll("chips").map(String);
       skipped = intent === "skip";
@@ -56,29 +62,19 @@ export async function POST(request: Request) {
     const sessionId = await currentSession();
     await upsertAnswer(sessionId, questionKey, skipped ? "" : answerText, skipped);
 
-    if (contentType.includes("application/json")) {
+    if (!intent) {
       return withSession(NextResponse.json({ ok: true }), sessionId, request);
     }
 
     const answers = await getAnswerMap(sessionId);
-    if (intent === "back") {
-      const previous = neighborKey(questionKey, answers, "back");
-      const target = previous === "stay" ? questionKey : previous;
-      const url = new URL("/intake", request.url);
-      url.searchParams.set("q", target === "review" ? questionKey : target);
-      url.searchParams.set("saved", "1");
-      return withSession(NextResponse.redirect(url, 303), sessionId, request);
+    const href = intakeDestination(questionKey as QuestionKey, answers, intent);
+    if (href === "/intake/review") await syncProfile(sessionId);
+
+    if (contentType.includes("application/json")) {
+      return withSession(NextResponse.json({ ok: true, href }), sessionId, request);
     }
 
-    const next = neighborKey(questionKey, answers, "next");
-    if (next === "review") {
-      await syncProfile(sessionId);
-      return withSession(NextResponse.redirect(new URL("/intake/review", request.url), 303), sessionId, request);
-    }
-    const url = new URL("/intake", request.url);
-    url.searchParams.set("q", next);
-    url.searchParams.set("saved", "1");
-    return withSession(NextResponse.redirect(url, 303), sessionId, request);
+    return withSession(relativeRedirect(href), sessionId, request);
   } catch (error) {
     return fail(error);
   }

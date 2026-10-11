@@ -1,11 +1,36 @@
+"use client";
+
+import { useState, type FormEvent } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Chip } from "@/components/ui/chip";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { TextArea } from "@/components/ui/textarea";
 import { Autosave } from "@/components/intake/autosave";
 import { FocusHeading } from "@/components/intake/focus-heading";
 import { VoiceInput } from "@/components/intake/voice-input";
-import type { Question } from "@/lib/questions";
-import Link from "next/link";
+import { combineAnswer, type Question } from "@/lib/questions";
+
+type Intent = "next" | "back" | "skip";
+
+function intentFrom(event: FormEvent<HTMLFormElement>): Intent {
+  const submitter = (event.nativeEvent as SubmitEvent).submitter;
+  const value = submitter instanceof HTMLButtonElement ? submitter.value : "next";
+  if (value === "back" || value === "skip") return value;
+  return "next";
+}
+
+function answerFrom(form: HTMLFormElement, question: Question, intent: Intent) {
+  if (intent === "skip") return { answerText: "", skipped: true };
+  const data = new FormData(form);
+  const typed = String(data.get("answerText") ?? "");
+  if (question.kind === "choice") {
+    const answerText = question.choices?.some((choice) => choice.value === typed) ? typed : "";
+    return { answerText, skipped: false };
+  }
+  const chips = data.getAll("chips").map(String);
+  return { answerText: combineAnswer(typed, chips, question.chips), skipped: false };
+}
 
 export function QuestionForm({
   question,
@@ -24,8 +49,45 @@ export function QuestionForm({
   saved: boolean;
   showReviewLink: boolean;
 }) {
+  const router = useRouter();
+  const [pending, setPending] = useState(false);
+  const [status, setStatus] = useState(saved ? "Saved" : "");
+
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (pending) return;
+    const form = event.currentTarget;
+    const intent = intentFrom(event);
+    const { answerText, skipped } = answerFrom(form, question, intent);
+    setPending(true);
+    setStatus("Saving");
+    try {
+      const response = await fetch("/api/intake/answer", {
+        method: "POST",
+        headers: { "content-type": "application/json", accept: "application/json" },
+        body: JSON.stringify({ questionKey: question.key, answerText, skipped, intent }),
+        redirect: "manual",
+      });
+      if (!response.ok) {
+        setStatus("Not saved yet. Stay on this question and try again.");
+        setPending(false);
+        return;
+      }
+      const payload = (await response.json()) as { href?: string };
+      if (!payload.href || !payload.href.startsWith("/")) {
+        setStatus("Not saved yet. Stay on this question and try again.");
+        setPending(false);
+        return;
+      }
+      router.push(payload.href);
+    } catch {
+      setStatus("Not saved yet. Stay on this question and try again.");
+      setPending(false);
+    }
+  }
+
   return (
-    <form id="intake-form" action="/api/intake/answer" method="post" className="grid gap-6 pb-40" autoComplete="off">
+    <form id="intake-form" action="/api/intake/answer" method="post" className="grid gap-6 pb-40" autoComplete="off" onSubmit={onSubmit} aria-busy={pending}>
       <FocusHeading id="question-title" />
       <Autosave questionKey={question.key} chips={question.chips} />
       <ProgressBar current={index + 1} total={total} />
@@ -82,7 +144,7 @@ export function QuestionForm({
         </div>
       )}
       <p id="save-status" role="status" aria-live="polite">
-        {saved ? "Saved" : ""}
+        {status}
       </p>
       {showReviewLink ? (
         <p>
@@ -98,23 +160,25 @@ export function QuestionForm({
             type="submit"
             name="intent"
             value="back"
-            disabled={index === 0}
+            disabled={pending || index === 0}
           >
             Back
           </button>
           <button
-            className="min-h-[56px] min-w-[56px] rounded-2xl border-2 border-line bg-card px-2 font-bold leading-tight"
+            className="min-h-[56px] min-w-[56px] rounded-2xl border-2 border-line bg-card px-2 font-bold leading-tight disabled:opacity-70"
             type="submit"
             name="intent"
             value="skip"
+            disabled={pending}
           >
             Skip for now
           </button>
           <button
-            className="min-h-[56px] min-w-[56px] rounded-2xl border-2 border-primary bg-primary px-2 font-bold leading-tight text-on-primary"
+            className="min-h-[56px] min-w-[56px] rounded-2xl border-2 border-primary bg-primary px-2 font-bold leading-tight text-on-primary disabled:opacity-70"
             type="submit"
             name="intent"
             value="next"
+            disabled={pending}
           >
             Next
           </button>
