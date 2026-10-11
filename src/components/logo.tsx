@@ -12,16 +12,3 @@ export function LogoMark() {
     />
   );
 }
-
-export function LogoLockup() {
-  return (
-    <Image
-      src="/logo-lockup.png"
-      alt="ParkCare. Personalized Support. A Brighter Tomorrow. For Parkinson's."
-      width={949}
-      height={854}
-      priority
-      className="h-auto w-full max-w-sm rounded-2xl bg-white p-3"
-    />
-  );
-}
