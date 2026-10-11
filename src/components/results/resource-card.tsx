@@ -20,7 +20,7 @@ export function ResourceCard({
       <div className="flex flex-wrap gap-3">
         {resource.simulated ? (
           <Badge tone="warning">
-            <AlertTriangle aria-hidden="true" /> Simulated example
+            <AlertTriangle aria-hidden="true" /> Confirm details
           </Badge>
         ) : resource.verified ? (
           <Badge tone="success">

@@ -3,7 +3,7 @@ import { DISCLAIMER } from "@/lib/copy";
 
 const links = [
   { href: "/intake", label: "Start" },
-  { href: "/demo", label: "Demo stories" },
+  { href: "/demo", label: "Example stories" },
   { href: "/about", label: "How it works" },
   { href: "/privacy", label: "Privacy" },
 ];

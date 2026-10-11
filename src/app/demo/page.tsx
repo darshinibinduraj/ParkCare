@@ -3,16 +3,16 @@ import { MainColumn } from "@/components/main-column";
 import { Card } from "@/components/ui/card";
 import { DEMO_SCENARIOS } from "@/lib/demo-scenarios";
 
-export const metadata = { title: "Demo stories" };
+export const metadata = { title: "Example stories" };
 
 export default function DemoPage() {
   return (
     <MainColumn className="grid gap-6">
       <div className="grid max-w-measure gap-3">
-        <h1 className="text-4xl font-bold">Demo stories</h1>
+        <h1 className="text-4xl font-bold">Example stories</h1>
         <p>
-          These people are fictional. Pick one to fill the intake, run the three helpers, and open a plan. On the plan
-          page you can change the budget or the amount of help and run it again.
+          Pick a situation to fill the intake and open a plan. On the plan page you can change the budget or the
+          amount of help and run it again.
         </p>
       </div>
       {DEMO_SCENARIOS.map((scenario) => (

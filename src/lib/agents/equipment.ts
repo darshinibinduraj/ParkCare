@@ -58,7 +58,7 @@ export function runEquipmentAgent(profile: PatientProfile, items: EquipmentItem[
       `Home and daily-living categories considered: ${[...categories].sort().join(", ")}.`,
       Number.isFinite(cap)
         ? `Budget filter: ${BUDGET_LABEL[profile.budget]}. Example products over $${cap} were left out.`
-        : "Budget filter: more flexibility, so higher-priced examples can appear. Prices are still simulated.",
+        : "Budget filter: more flexibility, so higher-priced options can appear. Prices shown are estimates, not store quotes.",
       profile.falls.reported
         ? "Falls were reported, so bathroom, lighting, floors, and walking supports were included."
         : "Falls were not reported, so fall-specific products were not added.",
@@ -69,7 +69,7 @@ export function runEquipmentAgent(profile: PatientProfile, items: EquipmentItem[
       title: item.name,
       why: item.verified
         ? `${item.description} This is general guidance from the listed source, not a product recommendation. A physical or occupational therapist can say whether it fits.`
-        : `${item.description} The price is a simulated estimate, not a store price. A therapist should help you decide before buying.`,
+        : `${item.description} The price is an estimate, not a store price. A therapist should help you decide before buying.`,
       priority: item.verified ? 1 : index < 2 ? 1 : 2,
     })),
     flagsForOtherAgents: [

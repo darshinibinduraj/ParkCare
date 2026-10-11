@@ -29,7 +29,7 @@ export default async function HomePage({
           <Link href="/intake">Start</Link>
         </Button>
         <Button asChild variant="secondary">
-          <Link href="/demo">Try a demo story</Link>
+          <Link href="/demo">Try an example</Link>
         </Button>
       </div>
       <div className="grid gap-4">

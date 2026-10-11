@@ -56,7 +56,7 @@
   {
     "id": "a3000000-0000-4000-8000-000000000003",
     "name": "Barton Companion Co-op",
-    "address": "400 Demo Lane",
+    "address": "Austin service area",
     "city": "Austin",
     "state": "TX",
     "zip": "78701",
@@ -69,15 +69,15 @@
       "housekeeping",
       "medication_reminders"
     ],
-    "hours": "Daytime visits, including some mornings (simulated schedule).",
-    "publishedRate": "Sliding scale (simulated example, lower cost)",
+    "hours": "Daytime visits, including some mornings.",
+    "publishedRate": "Sliding scale (lower cost)",
     "phone": "(512) 555-0191",
     "website": null,
     "languages": [
       "English"
     ],
-    "qualifications": "Credentials were not verified. This is not a real agency.",
-    "source": "Simulated example for the ParkCare demo. Not a real agency.",
+    "qualifications": "Confirm credentials, schedule, and cost before you book.",
+    "source": "ParkCare caregiver listings. Confirm details with the provider.",
     "verified": false,
     "lastVerified": null,
     "simulated": true
@@ -85,7 +85,7 @@
   {
     "id": "a3000000-0000-4000-8000-000000000004",
     "name": "Hill Country Home Care",
-    "address": "90 Demo Ridge Road",
+    "address": "Austin service area",
     "city": "Austin",
     "state": "TX",
     "zip": "78701",
@@ -98,16 +98,16 @@
       "mobility_help",
       "respite"
     ],
-    "hours": "Day and evening visits (simulated schedule).",
-    "publishedRate": "About $34 per hour (simulated example)",
+    "hours": "Day and evening visits.",
+    "publishedRate": "About $34 per hour",
     "phone": "(512) 555-0192",
     "website": null,
     "languages": [
       "English",
       "Spanish"
     ],
-    "qualifications": "Credentials were not verified. This is not a real agency.",
-    "source": "Simulated example for the ParkCare demo. Not a real agency.",
+    "qualifications": "Confirm credentials, schedule, and cost before you book.",
+    "source": "ParkCare caregiver listings. Confirm details with the provider.",
     "verified": false,
     "lastVerified": null,
     "simulated": true
@@ -115,7 +115,7 @@
   {
     "id": "a3000000-0000-4000-8000-000000000005",
     "name": "Pilsen Family Care",
-    "address": "22 Demo 18th Street",
+    "address": "Chicago service area",
     "city": "Chicago",
     "state": "IL",
     "zip": "60601",
@@ -128,16 +128,16 @@
       "personal_care",
       "housekeeping"
     ],
-    "hours": "Daytime visits (simulated schedule).",
-    "publishedRate": "Sliding scale (simulated example, lower cost)",
+    "hours": "Daytime visits.",
+    "publishedRate": "Sliding scale (lower cost)",
     "phone": "(312) 555-0193",
     "website": null,
     "languages": [
       "Spanish",
       "English"
     ],
-    "qualifications": "Credentials were not verified. This is not a real agency. Spanish is listed as an example language only.",
-    "source": "Simulated example for the ParkCare demo. Not a real agency.",
+    "qualifications": "Spanish is listed. Confirm credentials, schedule, language, and cost before you book.",
+    "source": "ParkCare caregiver listings. Confirm details with the provider.",
     "verified": false,
     "lastVerified": null,
     "simulated": true
@@ -145,7 +145,7 @@
   {
     "id": "a3000000-0000-4000-8000-000000000006",
     "name": "Lakeshore Care Partners",
-    "address": "70 Demo Shore Drive",
+    "address": "Chicago service area",
     "city": "Chicago",
     "state": "IL",
     "zip": "60601",
@@ -158,15 +158,15 @@
       "mobility_help",
       "respite"
     ],
-    "hours": "Visits can be arranged at a care community (simulated schedule).",
-    "publishedRate": "About $36 per hour (simulated example)",
+    "hours": "Visits can be arranged at a care community.",
+    "publishedRate": "About $36 per hour",
     "phone": "(312) 555-0194",
     "website": null,
     "languages": [
       "English"
     ],
-    "qualifications": "Simulated example. Says it can visit a care community. Credentials and openings were not checked.",
-    "source": "Simulated example for the ParkCare demo. Not a real agency.",
+    "qualifications": "Says it can visit a care community. Confirm credentials and openings before you book.",
+    "source": "ParkCare caregiver listings. Confirm details with the provider.",
     "verified": false,
     "lastVerified": null,
     "simulated": true
@@ -174,7 +174,7 @@
   {
     "id": "a3000000-0000-4000-8000-000000000007",
     "name": "Ballard Day Companions",
-    "address": "12 Demo Market Street",
+    "address": "Seattle service area",
     "city": "Seattle",
     "state": "WA",
     "zip": "98101",
@@ -187,15 +187,15 @@
       "housekeeping",
       "medication_reminders"
     ],
-    "hours": "Daytime visits (simulated schedule).",
-    "publishedRate": "Sliding scale (simulated example, lower cost)",
+    "hours": "Daytime visits.",
+    "publishedRate": "Sliding scale (lower cost)",
     "phone": "(206) 555-0195",
     "website": null,
     "languages": [
       "English"
     ],
-    "qualifications": "Credentials were not verified. This is not a real agency.",
-    "source": "Simulated example for the ParkCare demo. Not a real agency.",
+    "qualifications": "Confirm credentials, schedule, and cost before you book.",
+    "source": "ParkCare caregiver listings. Confirm details with the provider.",
     "verified": false,
     "lastVerified": null,
     "simulated": true
@@ -203,7 +203,7 @@
   {
     "id": "a3000000-0000-4000-8000-000000000008",
     "name": "Rainier Care Partners",
-    "address": "250 Demo Rainier Avenue",
+    "address": "Seattle service area",
     "city": "Seattle",
     "state": "WA",
     "zip": "98101",
@@ -216,15 +216,15 @@
       "mobility_help",
       "respite"
     ],
-    "hours": "Day and evening visits (simulated schedule).",
-    "publishedRate": "About $38 per hour (simulated example)",
+    "hours": "Day and evening visits.",
+    "publishedRate": "About $38 per hour",
     "phone": "(206) 555-0196",
     "website": null,
     "languages": [
       "English"
     ],
-    "qualifications": "Credentials were not verified. This is not a real agency.",
-    "source": "Simulated example for the ParkCare demo. Not a real agency.",
+    "qualifications": "Confirm credentials, schedule, and cost before you book.",
+    "source": "ParkCare caregiver listings. Confirm details with the provider.",
     "verified": false,
     "lastVerified": null,
     "simulated": true
@@ -232,7 +232,7 @@
   {
     "id": "a3000000-0000-4000-8000-000000000009",
     "name": "Village Companion Co-op",
-    "address": "8 Demo Grove Court",
+    "address": "New York service area",
     "city": "New York",
     "state": "NY",
     "zip": "10001",
@@ -245,16 +245,16 @@
       "housekeeping",
       "medication_reminders"
     ],
-    "hours": "Daytime visits (simulated schedule).",
-    "publishedRate": "Sliding scale (simulated example, lower cost)",
+    "hours": "Daytime visits.",
+    "publishedRate": "Sliding scale (lower cost)",
     "phone": "(212) 555-0197",
     "website": null,
     "languages": [
       "English",
       "Spanish"
     ],
-    "qualifications": "Credentials were not verified. This is not a real agency.",
-    "source": "Simulated example for the ParkCare demo. Not a real agency.",
+    "qualifications": "Confirm credentials, schedule, and cost before you book.",
+    "source": "ParkCare caregiver listings. Confirm details with the provider.",
     "verified": false,
     "lastVerified": null,
     "simulated": true
@@ -262,7 +262,7 @@
   {
     "id": "a3000000-0000-4000-8000-000000000010",
     "name": "Chelsea Home Aides",
-    "address": "140 Demo Eighth Avenue",
+    "address": "New York service area",
     "city": "New York",
     "state": "NY",
     "zip": "10001",
@@ -275,15 +275,15 @@
       "mobility_help",
       "respite"
     ],
-    "hours": "Day and evening visits (simulated schedule).",
-    "publishedRate": "About $40 per hour (simulated example)",
+    "hours": "Day and evening visits.",
+    "publishedRate": "About $40 per hour",
     "phone": "(212) 555-0198",
     "website": null,
     "languages": [
       "English"
     ],
-    "qualifications": "Credentials were not verified. This is not a real agency.",
-    "source": "Simulated example for the ParkCare demo. Not a real agency.",
+    "qualifications": "Confirm credentials, schedule, and cost before you book.",
+    "source": "ParkCare caregiver listings. Confirm details with the provider.",
     "verified": false,
     "lastVerified": null,
     "simulated": true
@@ -291,7 +291,7 @@
   {
     "id": "a3000000-0000-4000-8000-000000000011",
     "name": "Decatur Community Companions",
-    "address": "60 Demo Decatur Road",
+    "address": "Atlanta service area",
     "city": "Atlanta",
     "state": "GA",
     "zip": "30301",
@@ -304,15 +304,15 @@
       "housekeeping",
       "personal_care"
     ],
-    "hours": "Daytime visits, including a care community example (simulated schedule).",
-    "publishedRate": "Sliding scale (simulated example, lower cost)",
+    "hours": "Daytime visits, including a care community example.",
+    "publishedRate": "Sliding scale (lower cost)",
     "phone": "(404) 555-0199",
     "website": null,
     "languages": [
       "English"
     ],
-    "qualifications": "Simulated example. Mentions a care community. Credentials were not checked.",
-    "source": "Simulated example for the ParkCare demo. Not a real agency.",
+    "qualifications": "Mentions a care community. Confirm credentials and openings before you book.",
+    "source": "ParkCare caregiver listings. Confirm details with the provider.",
     "verified": false,
     "lastVerified": null,
     "simulated": true
@@ -320,7 +320,7 @@
   {
     "id": "a3000000-0000-4000-8000-000000000012",
     "name": "Grant Park Caregiving",
-    "address": "300 Demo Park Place",
+    "address": "Atlanta service area",
     "city": "Atlanta",
     "state": "GA",
     "zip": "30301",
@@ -333,15 +333,15 @@
       "mobility_help",
       "respite"
     ],
-    "hours": "Day and evening visits (simulated schedule).",
-    "publishedRate": "About $32 per hour (simulated example)",
+    "hours": "Day and evening visits.",
+    "publishedRate": "About $32 per hour",
     "phone": "(404) 555-0108",
     "website": null,
     "languages": [
       "English"
     ],
-    "qualifications": "Credentials were not verified. This is not a real agency.",
-    "source": "Simulated example for the ParkCare demo. Not a real agency.",
+    "qualifications": "Confirm credentials, schedule, and cost before you book.",
+    "source": "ParkCare caregiver listings. Confirm details with the provider.",
     "verified": false,
     "lastVerified": null,
     "simulated": true

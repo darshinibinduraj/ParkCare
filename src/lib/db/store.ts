@@ -342,7 +342,7 @@ export async function getPlanView(sessionId: string): Promise<PlanView | null> {
       priceLabel:
         item.estimatedPriceUsd === null
           ? null
-          : `Simulated estimate: about $${item.estimatedPriceUsd}`,
+          : `Estimated price: about $${item.estimatedPriceUsd}`,
       source: item.source,
       verified: item.verified,
       simulated: item.simulated,

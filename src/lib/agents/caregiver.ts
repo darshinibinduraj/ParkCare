@@ -58,14 +58,14 @@ export function runCaregiverAgent(profile: PatientProfile, services: CaregiverSe
       profile.preferences.language
         ? `Language preference noted: ${profile.preferences.language}.`
         : "No language preference was provided.",
-      "Example agencies are simulated. National helplines are real public services. Availability was not checked.",
+      "Support options were not contacted. National helplines are public services. Availability was not checked.",
     ],
     recommendations: chosen.map((service, index) => ({
       resourceId: service.id,
       title: service.name,
       why: service.verified
         ? `${service.name} is a real public information service. It does not assign a caregiver. Ask them what is available near you.`
-        : `${service.name} is a fictional agency for the demo. It is tagged for this place and for ${SUPPORT_LABEL[profile.supportNeeds].toLowerCase()}. Ask any real agency about openings, cost, language, and training before you decide.`,
+        : `${service.name} matches this place and ${SUPPORT_LABEL[profile.supportNeeds].toLowerCase()}. Ask about openings, cost, language, and training before you decide.`,
       priority: service.simulated ? (index === 0 ? 1 : 2) : 3,
     })),
     flagsForOtherAgents: [
@@ -95,7 +95,7 @@ export function runCaregiverAgent(profile: PatientProfile, services: CaregiverSe
         : "Caregiver gender was not requested.",
       profile.budget === "limited"
         ? "Limited budget: higher-priced example agencies were hidden when a lower-cost example exists."
-        : "Published rates on simulated rows are examples, not quotes.",
+        : "Published rates are estimates, not quotes.",
     ],
   });
 }

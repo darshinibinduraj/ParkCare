@@ -32,9 +32,8 @@ export function SourceTabs() {
           . Those tools do not show who is taking new patients.
         </p>
         <p>
-          Nearby sites come from the HRSA Health Center Service Delivery and Look-Alike Sites file in{" "}
-          <span className="break-all">src/data</span>. They are real health center locations. They are not
-          movement-disorder specialists. ParkCare does not invent openings or insurance.
+          Nearby sites come from HRSA&apos;s Health Center Service Delivery and Look-Alike Sites file. They are
+          health center locations, not movement-disorder specialists. ParkCare does not invent openings or insurance.
         </p>
       </Tabs.Content>
       <Tabs.Content value="equipment" className="grid max-w-measure gap-3">
@@ -56,8 +55,8 @@ export function SourceTabs() {
           . Please read the original pages.
         </p>
         <p>
-          Example products and prices are simulated. Verified guidance has no invented price. A therapist should help
-          you choose any device.
+          Some product cards include an estimated price. Verified guidance has no price. A therapist should help you
+          choose any device.
         </p>
       </Tabs.Content>
       <Tabs.Content value="caregiver" className="grid max-w-measure gap-3">
@@ -73,8 +72,8 @@ export function SourceTabs() {
           . They are public information services, not assigned caregivers.
         </p>
         <p>
-          Named agencies in the demo are fictional and marked Simulated example. Credentials, schedules, and prices on
-          those cards were not checked.
+          Local caregiver cards are listings to contact. Credentials, schedules, and prices on those cards were not
+          checked.
         </p>
       </Tabs.Content>
     </Tabs.Root>

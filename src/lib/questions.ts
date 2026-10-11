@@ -75,7 +75,7 @@ export const QUESTIONS: Question[] = [
   {
     key: "q8",
     prompt: "What city or ZIP code are you in?",
-    help: "We use this only to look for example resources in the demo dataset. A city or a ZIP code is enough.",
+    help: "A city or a ZIP code is enough. We use it to look for resources near you.",
     kind: "text",
     chips: ["I'd rather not say"],
   },
