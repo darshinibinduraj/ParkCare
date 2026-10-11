@@ -2,8 +2,9 @@ import Link from "next/link";
 import { HelpDialog } from "@/components/ui/dialog";
 import { Logo } from "@/components/logo";
 import { PreferenceControls } from "@/components/preferences";
+import type { TextSizeName, ThemeName } from "@/lib/theme";
 
-export function SiteHeader() {
+export function SiteHeader({ theme, textSize }: { theme: ThemeName; textSize: TextSizeName }) {
   return (
     <header className="no-print border-b-2 border-line bg-card">
       <div className="mx-auto grid max-w-5xl gap-4 px-4 py-4">
@@ -15,7 +16,7 @@ export function SiteHeader() {
           <HelpDialog />
         </div>
         <div className="flex flex-wrap items-center gap-4">
-          <PreferenceControls />
+          <PreferenceControls initialTheme={theme} initialTextSize={textSize} />
         </div>
       </div>
     </header>

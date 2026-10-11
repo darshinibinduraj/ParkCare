@@ -25,13 +25,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang="en" data-theme={theme} data-text-size={textSize} suppressHydrationWarning>
-      <body className="flex min-h-screen flex-col">
+      <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }} />
+      </head>
+      <body className="flex min-h-screen flex-col">
         <a className="skip-link" href="#main">
           Skip to content
         </a>
         <Providers>
-          <SiteHeader />
+          <SiteHeader theme={theme} textSize={textSize} />
           <div className="flex-1">{children}</div>
           <SiteFooter />
         </Providers>

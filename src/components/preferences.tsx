@@ -7,9 +7,10 @@ import {
   TEXT_SIZE_LABEL,
   THEMES,
   applyPreferences,
-  isTextSize,
-  isTheme,
+  cookieValue,
   preferredTheme,
+  resolveTextSize,
+  resolveTheme,
   type TextSizeName,
   type ThemeName,
 } from "@/lib/theme";
@@ -20,18 +21,22 @@ const THEME_LABEL: Record<ThemeName, string> = {
   contrast: "Contrast",
 };
 
-export function PreferenceControls() {
-  const [theme, setTheme] = useState<ThemeName>("light");
-  const [textSize, setTextSize] = useState<TextSizeName>("md");
+export function PreferenceControls({
+  initialTheme,
+  initialTextSize,
+}: {
+  initialTheme: ThemeName;
+  initialTextSize: TextSizeName;
+}) {
+  const [theme, setTheme] = useState<ThemeName>(initialTheme);
+  const [textSize, setTextSize] = useState<TextSizeName>(initialTextSize);
 
   useEffect(() => {
-    const storedTheme = localStorage.getItem("parkcare-theme") ?? undefined;
-    const storedSize = localStorage.getItem("parkcare-text-size") ?? undefined;
-    const nextTheme = isTheme(storedTheme) ? storedTheme : preferredTheme();
-    const nextSize = isTextSize(storedSize) ? storedSize : "md";
+    const nextTheme = resolveTheme(localStorage.getItem("parkcare-theme"), cookieValue("parkcare_theme"), preferredTheme());
+    const nextSize = resolveTextSize(localStorage.getItem("parkcare-text-size"), cookieValue("parkcare_text"));
     setTheme(nextTheme);
     setTextSize(nextSize);
-    applyPreferences(nextTheme, nextSize, false);
+    applyPreferences(nextTheme, nextSize, true);
     void fetch("/api/session", {
       method: "POST",
       headers: { "content-type": "application/json" },
