@@ -17,7 +17,8 @@ import { requestAgentPlan } from "@/lib/agent-client";
 import { createPlan, polishPlan } from "@/lib/agents/orchestrator";
 import type { AgentMessage, CarePlan, PatientProfile } from "@/lib/schemas";
 import { agentMessageSchema, carePlanSchema, patientProfileSchema } from "@/lib/schemas";
-import type { CaregiverService, Dataset, EquipmentItem, MedicalResource } from "@/lib/resources";
+import { loadHrsaSites } from "@/data/hrsa-sites";
+import { isNational, locationMatches, type CaregiverService, type Dataset, type EquipmentItem, type MedicalResource } from "@/lib/resources";
 
 const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
@@ -165,10 +166,15 @@ async function loadDataset(): Promise<Dataset> {
   const medicalRows = await db.select().from(medicalResources);
   const equipmentRows = await db.select().from(equipmentItems);
   const caregiverRows = await db.select().from(caregiverServices);
-  const medical: MedicalResource[] = medicalRows.map((row) => ({
-    ...row,
-    lastVerified: dateOnly(row.lastVerified),
-  }));
+  const medical: MedicalResource[] = [
+    ...medicalRows
+      .map((row) => ({
+        ...row,
+        lastVerified: dateOnly(row.lastVerified),
+      }))
+      .filter((row) => !row.simulated),
+    ...loadHrsaSites(),
+  ];
   const equipment: EquipmentItem[] = equipmentRows.map((row) => ({
     ...row,
     estimatedPriceUsd: money(row.estimatedPriceUsd),
@@ -193,7 +199,13 @@ export async function runCarePlan(sessionId: string) {
   const saved = await getProfile(sessionId);
   if (!saved) throw new Error("missing_profile");
   const previous = await getLatestPlan(sessionId);
-  const data = await loadDataset();
+  const loaded = await loadDataset();
+  const data: Dataset = {
+    ...loaded,
+    medical: loaded.medical.filter(
+      (row) => isNational(row.city) || locationMatches(saved.profile.location.cityOrZip, row),
+    ),
+  };
   const remote = await requestAgentPlan(saved.profile, data, previous);
   const built = remote ?? { ...createPlan(saved.profile, data, previous), transport: "local-fallback" as const };
   const plan = await polishPlan(built.plan, saved.profile);

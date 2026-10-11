@@ -35,7 +35,7 @@ pnpm typecheck
 
 ## Agents over SLIM
 
-The care plan is built by a Python service in `agents/`. Three helpers (medical, equipment, caregiver) are A2A servers named `agntcy/parkcare/medical_agent`, `agntcy/parkcare/equipment_agent`, and `agntcy/parkcare/caregiver_agent`. The orchestrator sends the profile and the other helpers' findings over [SLIM](https://docs.agntcy.org/slim/overview/) using `slima2a` 0.7.1. Round 2 can change the list. For a fall, the medical helper moves the balance clinic ahead of the other local clinic after the equipment helper's home-safety note.
+The care plan is built by a Python service in `agents/`. Three helpers (medical, equipment, caregiver) are A2A servers named `agntcy/parkcare/medical_agent`, `agntcy/parkcare/equipment_agent`, and `agntcy/parkcare/caregiver_agent`. The orchestrator sends the profile and the other helpers' findings over [SLIM](https://docs.agntcy.org/slim/overview/) using `slima2a` 0.7.1. Round 2 can change the list. For a fall and a limited budget, the medical helper moves a general community clinic ahead of a school, mobile, or shelter site after the equipment helper's home-safety note.
 
 ```bash
 docker compose up slim
@@ -77,13 +77,13 @@ Set `LLM_API_KEY` or `ANTHROPIC_API_KEY` to send answer text to Anthropic for th
 
 Seed files live in `src/data/seed/`. `pnpm db:seed` loads `medical.json`, `equipment.json`, and `caregivers.json` when those files exist, and otherwise uses `catalog.ts`. Regenerate the JSON with `pnpm db:export-seed`.
 
-Verified rows are public directories and paraphrased Parkinson's Foundation guidance, with links back to the source. Local clinics, products, and agencies are simulated and labeled in the UI. Prices on simulated products are fake estimates. Verified guidance has no invented price.
+The medical helper's site list is `src/data/Health_Center_Service_Delivery_and_LookAlike_Sites.csv`, the HRSA Health Center Service Delivery and Look-Alike Sites file. National directory cards stay in the seed. Equipment products and caregiver agencies in the demo are still simulated and labeled in the UI. Prices on simulated products are fake estimates. Verified guidance has no invented price.
 
 Source notes for the medical and equipment datasets are also in `parkinsons-care-ai.md`.
 
 ## Not in this version
 
 - Accounts, real patient histories, and custom model training
-- A live import of the full CMS or NPI datasets
+- A live import of the full CMS or NPI datasets. The HRSA health center file is a saved copy in `src/data`, not a daily download.
 - A side-by-side write-up of multi-agent versus three fully independent agents (stretch)
 - A usability session with a person with Parkinson's

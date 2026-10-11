@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
+import { loadHrsaSites } from "../../data/hrsa-sites";
 import { caregiverServices, equipmentItems, medicalResources } from "../../data/seed/catalog";
 import { DEMO_SCENARIOS } from "../demo-scenarios";
 import { extractProfileHeuristic } from "../extract";
@@ -10,8 +11,10 @@ import { detectUrgent } from "./synthesizer";
 import type { Dataset } from "../resources";
 import type { PatientProfile } from "../schemas";
 
+const hrsaSites = loadHrsaSites();
+
 const data: Dataset = {
-  medical: medicalResources,
+  medical: [...medicalResources, ...hrsaSites],
   equipment: equipmentItems,
   caregivers: caregiverServices,
 };
@@ -45,7 +48,13 @@ test("seed rows are either verified or simulated, never both", () => {
     if (item.verified) assert.equal(item.estimatedPriceUsd, null, item.name);
     if (item.simulated) assert.equal(item.productUrl, null, item.name);
   }
-  assert.ok(medicalResources.length >= 10);
+  assert.ok(medicalResources.length >= 3);
+  assert.ok(hrsaSites.length > 10000);
+  for (const row of hrsaSites) {
+    assert.equal(row.verified, true, row.name);
+    assert.equal(row.simulated, false, row.name);
+    if (row.website) assert.match(row.website, /^https:\/\//, row.name);
+  }
   assert.ok(equipmentItems.length >= 15);
   assert.ok(caregiverServices.length >= 10);
 });
@@ -72,18 +81,18 @@ test("three fictional patients get a plan from all three helpers", () => {
   }
 });
 
-test("equipment's home-safety note moves the balance clinic ahead of the other local clinic", () => {
+test("equipment's home-safety note moves a community clinic ahead of a weaker site", () => {
   const { plan, messages } = createPlan(profileFor("falls-alone"), data, null);
   const note = messages
     .filter((message) => message.round === 2 && message.sender === "medical")
     .map((message) => message.content)
     .join(" ");
-  assert.match(note, /Barton Creek Balance Clinic/);
-  assert.match(note, /ahead of Austin Community Neurology Clinic/);
+  assert.match(note, /ahead of CommUnityCare Austin Resource Center for the Homeless/);
+  const moved = note.match(/I moved (.+) ahead of CommUnityCare Austin Resource Center for the Homeless/)?.[1];
   const titles = plan.medical.map((item) => item.title);
-  const balance = titles.indexOf("Barton Creek Balance Clinic");
-  const community = titles.indexOf("Austin Community Neurology Clinic");
-  assert.ok(balance >= 0 && community >= 0 && balance < community);
+  const shelter = titles.indexOf("CommUnityCare Austin Resource Center for the Homeless");
+  assert.ok(moved);
+  assert.ok(titles.indexOf(moved) >= 0 && shelter >= 0 && titles.indexOf(moved) < shelter);
 });
 
 test("budget changes which equipment and caregiver examples appear", () => {
@@ -97,15 +106,21 @@ test("budget changes which equipment and caregiver examples appear", () => {
   assert.match(flexible.comparisonNote ?? "", /Budget changed/);
   assert.equal(titles(limited, "caregiver").includes("Hill Country Home Care"), false);
   assert.ok(titles(flexible, "caregiver").includes("Hill Country Home Care"));
-  const place = (plan: typeof limited, title: string) => titles(plan, "medical").indexOf(title);
-  assert.ok(place(limited, "Austin Community Neurology Clinic") < place(limited, "Lone Star Movement Center"));
-  assert.ok(place(flexible, "Lone Star Movement Center") < place(flexible, "Austin Community Neurology Clinic"));
+  const local = (plan: typeof limited) =>
+    titles(plan, "medical").filter(
+      (title) => title !== "CMS Doctors and Clinicians dataset" && title !== "HRSA Find a Health Center" && title !== "Parkinson's Foundation",
+    );
+  assert.notEqual(local(limited)[0], "CommUnityCare Austin Resource Center for the Homeless");
+  assert.equal(local(flexible)[0], "CommUnityCare Austin Resource Center for the Homeless");
 });
 
 test("a missing place does not invent local clinics", () => {
   const profile = extractProfileHeuristic({ q1: "Me", q3: "Tremor" });
   const plan = createPlan(profile, data, null).plan;
-  const local = plan.medical.filter((item) => medicalResources.find((row) => row.id === item.resourceId && row.simulated));
+  const local = plan.medical.filter((item) => {
+    const row = data.medical.find((resource) => resource.id === item.resourceId);
+    return row && row.city !== "National";
+  });
   assert.equal(local.length, 0);
   assert.ok(plan.missingInformation.includes("City or ZIP code"));
 });
