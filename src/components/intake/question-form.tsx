@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Chip } from "@/components/ui/chip";
 import { ProgressBar } from "@/components/ui/progress-bar";
@@ -79,7 +78,12 @@ export function QuestionForm({
         setPending(false);
         return;
       }
+      const from = `${window.location.pathname}${window.location.search}`;
       router.push(payload.href);
+      window.setTimeout(() => {
+        const now = `${window.location.pathname}${window.location.search}`;
+        if (now === from) window.location.assign(payload.href);
+      }, 1500);
     } catch {
       setStatus("Not saved yet. Stay on this question and try again.");
       setPending(false);
@@ -148,9 +152,9 @@ export function QuestionForm({
       </p>
       {showReviewLink ? (
         <p>
-          <Link className="inline-flex min-h-14 items-center underline" href="/intake/review">
+          <a className="inline-flex min-h-14 items-center underline" href="/intake/review">
             Check what we understood
-          </Link>
+          </a>
         </p>
       ) : null}
       <div className="no-print fixed inset-x-0 bottom-0 z-20 border-t-2 border-line bg-canvas">

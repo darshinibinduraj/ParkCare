@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { Disclaimer } from "@/components/disclaimer";
 import { MainColumn } from "@/components/main-column";
 import { Button } from "@/components/ui/button";
@@ -29,10 +28,11 @@ export default async function HomePage({
       </div>
       <div className="flex flex-wrap gap-4">
         <Button asChild>
-          <Link href="/intake">Start</Link>
+          <a href="/intake">Start</a>
         </Button>
         <Button asChild variant="secondary">
-          <Link href="/">Home</Link>
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+          <a href="/">Home</a>
         </Button>
       </div>
       <div className="grid gap-4">
@@ -65,9 +65,9 @@ export default async function HomePage({
           stay for 7 days, then they are deleted. You can delete them sooner.
         </p>
         <p>
-          <Link className="underline" href="/privacy">
+          <a className="underline" href="/privacy">
             Read the privacy notice
-          </Link>
+          </a>
         </p>
       </section>
       <Disclaimer />
