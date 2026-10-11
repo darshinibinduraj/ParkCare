@@ -1,6 +1,11 @@
 import { Card } from "@/components/ui/card";
-import { AGENT_LABEL } from "@/lib/copy";
 import type { CarePlan } from "@/lib/schemas";
+
+const PLAN_AGENT_LABEL = {
+  medical: "Medical agent",
+  equipment: "Equipment agent",
+  caregiver: "Caregiver agent",
+} as const;
 
 export function PlanCard({ plan }: { plan: CarePlan }) {
   return (
@@ -16,7 +21,7 @@ export function PlanCard({ plan }: { plan: CarePlan }) {
               <strong>{plan.generatedBy === "llm" ? "AI-generated explanation. " : "Generated explanation. "}</strong>
               {step.why}
             </p>
-            <p>From: {step.agents.map((agent) => AGENT_LABEL[agent]).join(", ")}.</p>
+            <p>From: {step.agents.map((agent) => PLAN_AGENT_LABEL[agent]).join(", ")}.</p>
           </li>
         ))}
       </ol>
