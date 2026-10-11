@@ -20,7 +20,10 @@ pnpm install
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Open [http://localhost:3001](http://localhost:3001).
+
+##SLIM health
+open [http://localhost:8000/health](http://localhost:8000/health)
 
 No database server is required. The first request creates `.data/pglite` and loads the seed data. To use hosted Postgres instead, copy `.env.example` to `.env.local` and set `DATABASE_URL`, then run `pnpm db:seed`.
 
