@@ -139,6 +139,7 @@ export const answerBodySchema = z.object({
   questionKey: z.enum(["q1", "q2", "q3", "q4", "q5", "q6", "q7", "q8", "q9", "q10"]),
   answerText: z.string().max(4000),
   skipped: z.boolean(),
+  intent: z.enum(["next", "back", "skip"]).optional(),
 });
 
 export const preferencesSchema = z.object({

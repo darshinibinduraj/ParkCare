@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Disclaimer } from "@/components/disclaimer";
 import { ReviewForm } from "@/components/intake/review-form";
@@ -59,9 +58,9 @@ export default async function ReviewPage({
         </ul>
       </details>
       <p>
-        <Link className="inline-flex min-h-14 items-center underline" href="/intake?q=q1">
+        <a className="inline-flex min-h-14 items-center underline" href="/intake?q=q1">
           Back to questions
-        </Link>
+        </a>
       </p>
       <ReviewForm initial={profile} />
       <noscript>

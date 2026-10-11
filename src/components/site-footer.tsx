@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { DISCLAIMER } from "@/lib/copy";
 
 const links = [
@@ -15,9 +14,9 @@ export function SiteFooter() {
         <p className="max-w-measure">{DISCLAIMER}</p>
         <nav aria-label="Footer" className="flex flex-wrap gap-4">
           {links.map((link) => (
-            <Link key={link.href} href={link.href} className="inline-flex min-h-14 items-center underline">
+            <a key={link.href} href={link.href} className="inline-flex min-h-14 items-center underline">
               {link.label}
-            </Link>
+            </a>
           ))}
         </nav>
       </div>

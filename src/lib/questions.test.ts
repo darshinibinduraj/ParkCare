@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { fallsQuestionRelevant, neighborKey, visibleQuestions } from "./questions";
+import { fallsQuestionRelevant, intakeDestination, neighborKey, visibleQuestions } from "./questions";
 
 test("falls question appears only after balance, walking, or falls", () => {
   assert.equal(fallsQuestionRelevant({ q3: "Mild tremor in my hand." }), false);
@@ -16,4 +16,13 @@ test("next and back move through the visible questions", () => {
   assert.equal(neighborKey("q4", answers, "next"), "q5");
   assert.equal(neighborKey("q1", {}, "back"), "stay");
   assert.equal(neighborKey("q10", {}, "next"), "review");
+});
+
+test("intake steps use a relative path", () => {
+  assert.equal(intakeDestination("q1", {}, "next"), "/intake?q=q2&saved=1");
+  assert.equal(intakeDestination("q2", {}, "back"), "/intake?q=q1&saved=1");
+  assert.equal(intakeDestination("q1", {}, "back"), "/intake?q=q1&saved=1");
+  assert.equal(intakeDestination("q4", { q3: "Balance problems" }, "next"), "/intake?q=q5&saved=1");
+  assert.equal(intakeDestination("q10", {}, "skip"), "/intake/review");
+  assert.equal(intakeDestination("q1", {}, "next").startsWith("http"), false);
 });

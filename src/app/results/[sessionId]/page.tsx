@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Disclaimer } from "@/components/disclaimer";
 import { MainColumn } from "@/components/main-column";
@@ -54,9 +53,9 @@ export default async function ResultsPage({ params }: { params: Promise<{ sessio
       <MainColumn className="grid gap-4">
         <h1 className="text-4xl font-bold">No plan yet</h1>
         <p>This session does not have a care plan. Start the intake or try an example story.</p>
-        <Link className="inline-flex min-h-14 items-center underline" href="/intake">
+        <a className="inline-flex min-h-14 items-center underline" href="/intake">
           Start
-        </Link>
+        </a>
       </MainColumn>
     );
   }
@@ -157,9 +156,9 @@ export default async function ResultsPage({ params }: { params: Promise<{ sessio
             </button>
           </form>
           <p>
-            <Link className="inline-flex min-h-14 items-center underline" href="/intake/review?edit=1">
+            <a className="inline-flex min-h-14 items-center underline" href="/intake/review?edit=1">
               Edit the full summary
-            </Link>
+            </a>
           </p>
           <form action="/api/session/delete" method="post" className="grid gap-3">
             <label className="flex min-h-14 items-center gap-4">

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { fail, jsonError, withSession } from "@/lib/http";
+import { fail, jsonError, relativeRedirect, withSession } from "@/lib/http";
 import { clientKey, rateLimit } from "@/lib/rate-limit";
 import { budgetSchema, supportSchema } from "@/lib/schemas";
 import { readSessionCookie } from "@/lib/session";
@@ -48,7 +48,7 @@ export async function POST(request: Request) {
     if (contentType.includes("application/json")) {
       return withSession(NextResponse.json({ sessionId: session.id }), session.id, request);
     }
-    return withSession(NextResponse.redirect(new URL(`/results/${session.id}`, request.url), 303), session.id, request);
+    return withSession(relativeRedirect(`/results/${session.id}`), session.id, request);
   } catch (error) {
     return fail(error);
   }
