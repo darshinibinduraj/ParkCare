@@ -82,7 +82,7 @@ export const QUESTIONS: Question[] = [
   {
     key: "q9",
     prompt: "How are you thinking about costs? A rough idea is fine.",
-    help: "This changes which example products and support options we show. It is not a bill.",
+    help: "This can change which lower-cost public options we put first. It is not a bill.",
     kind: "text",
     chips: ["Keeping costs low", "A middle range", "More flexibility", "I'm not sure"],
   },

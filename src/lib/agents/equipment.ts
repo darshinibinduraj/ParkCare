@@ -44,33 +44,23 @@ export function runEquipmentAgent(profile: PatientProfile, items: EquipmentItem[
   const matching = items.filter(
     (item) => categories.has(item.category) && withinBudget(item, profile),
   );
-  const verified = matching.filter((item) => item.verified).slice(0, 4);
-  const simulated = matching
-    .filter((item) => item.simulated)
-    .sort((a, b) => (a.estimatedPriceUsd ?? 0) - (b.estimatedPriceUsd ?? 0) || a.name.localeCompare(b.name))
-    .slice(0, 8);
-  const chosen = [...verified, ...simulated];
-  const cap = priceCap(profile);
+  const chosen = matching.filter((item) => item.verified && !item.simulated).slice(0, 8);
 
   return findingsSchema.parse({
     agent: "equipment",
     keyFindings: [
       `Home and daily-living categories considered: ${[...categories].sort().join(", ")}.`,
-      Number.isFinite(cap)
-        ? `Budget filter: ${BUDGET_LABEL[profile.budget]}. Example products over $${cap} were left out.`
-        : "Budget filter: more flexibility, so higher-priced options can appear. Prices shown are estimates, not store quotes.",
+      `Budget on file: ${BUDGET_LABEL[profile.budget]}. These notes are public guidance and have no price.`,
       profile.falls.reported
         ? "Falls were reported, so bathroom, lighting, floors, and walking supports were included."
-        : "Falls were not reported, so fall-specific products were not added.",
-      "No device was prescribed. Verified rows are paraphrased guidance with a source link and no invented price.",
+        : "Falls were not reported, so fall-specific notes were not added.",
+      "No device was prescribed. Every note is paraphrased guidance with a source link and no invented price.",
     ],
-    recommendations: chosen.map((item, index) => ({
+    recommendations: chosen.map((item) => ({
       resourceId: item.id,
       title: item.name,
-      why: item.verified
-        ? `${item.description} This is general guidance from the listed source, not a product recommendation. A physical or occupational therapist can say whether it fits.`
-        : `${item.description} The price is an estimate, not a store price. A therapist should help you decide before buying.`,
-      priority: item.verified ? 1 : index < 2 ? 1 : 2,
+      why: `${item.description} This is general guidance from the listed source, not a product recommendation. A physical or occupational therapist can say whether it fits.`,
+      priority: 1,
     })),
     flagsForOtherAgents: [
       {
@@ -81,10 +71,8 @@ export function runEquipmentAgent(profile: PatientProfile, items: EquipmentItem[
       },
     ],
     uncertainties: [
-      "Product fit, install, and real prices were not checked.",
-      profile.budget === "unknown"
-        ? "Budget was not provided, so higher-priced examples were left out."
-        : "Changing the budget will show or hide higher-priced examples.",
+      "These notes do not include a store price or a product to buy.",
+      "A therapist should decide whether any device fits. ParkCare does not sell equipment.",
       profile.homeEnvironment
         ? `Home notes on file: ${profile.homeEnvironment}.`
         : "Home layout details were limited.",
@@ -121,7 +109,7 @@ export function refineEquipment(
   if (profile.budget === "limited") {
     flags.push({
       to: "caregiver",
-      message: "Budget is limited. I left out higher-priced example products. A therapist can still discuss them.",
+      message: "Budget is limited. I did not add priced products. A therapist can still discuss devices.",
     });
   }
   return { ...own, recommendations, flagsForOtherAgents: flags.slice(0, 8) };

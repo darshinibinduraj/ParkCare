@@ -53,7 +53,7 @@ export function buildComparisonNote(previous: CarePlan | null, next: CarePlan): 
     supportChanged
       ? `Help needed changed from ${SUPPORT_LABEL[previous.inputs.supportNeeds]} to ${SUPPORT_LABEL[next.inputs.supportNeeds]}.`
       : "",
-    placeChanged ? "The city or ZIP changed, so local examples were looked up again." : "",
+    placeChanged ? "The city or ZIP changed, so nearby public sources were looked up again." : "",
     added.length ? `Added: ${added.join("; ")}.` : "",
     removed.length ? `Removed: ${removed.join("; ")}.` : "",
   ].filter(Boolean);

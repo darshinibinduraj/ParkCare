@@ -32,7 +32,7 @@ export default function AboutPage() {
         <ul className="grid list-disc gap-2 pl-6">
           <li>ParkCare does not diagnose, prescribe, or say what treatment to start or stop.</li>
           <li>It cannot see real appointment openings, credentials, or store prices.</li>
-          <li>Verified cards link to a public source. Other listings are there to compare. Confirm details before you act.</li>
+          <li>Every card comes from a public source. ParkCare does not add example products or example agencies.</li>
           <li>If an answer sounds urgent, the plan says to contact emergency services. ParkCare cannot assess that.</li>
           <li>There is no account, no saved history across devices, and no custom model training.</li>
         </ul>

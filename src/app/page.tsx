@@ -35,15 +35,15 @@ export default async function HomePage({
       <div className="grid gap-4">
         <Card>
           <h2 className="text-2xl font-bold">Medical helper</h2>
-          <p>Looks at movement changes, falls, and place. Points to public directories and clearly labeled examples.</p>
+          <p>Looks at movement changes, falls, and place. Points to public directories and health center sites.</p>
         </Card>
         <Card>
           <h2 className="text-2xl font-bold">Equipment helper</h2>
-          <p>Suggests home-safety ideas and daily-living tools. It does not prescribe a device or invent a price.</p>
+          <p>Shares home-safety and daily-living guidance from public sources. It does not prescribe a device or invent a price.</p>
         </Card>
         <Card>
           <h2 className="text-2xl font-bold">Caregiver helper</h2>
-          <p>Matches support needs, home life, and budget to example services and real public helplines.</p>
+          <p>Matches support needs and home life to public helplines. It does not assign a caregiver.</p>
         </Card>
       </div>
       <section className="grid max-w-measure gap-3">

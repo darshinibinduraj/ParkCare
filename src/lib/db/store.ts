@@ -185,18 +185,22 @@ async function loadDataset(): Promise<Dataset> {
       .filter((row) => !row.simulated),
     ...loadHrsaSites(),
   ];
-  const equipment: EquipmentItem[] = equipmentRows.map((row) => ({
-    ...row,
-    estimatedPriceUsd: money(row.estimatedPriceUsd),
-    lastVerified: dateOnly(row.lastVerified),
-  }));
-  const caregivers: CaregiverService[] = caregiverRows.map((row) => ({
-    ...row,
-    serviceArea: row.serviceArea ?? [],
-    assistanceTypes: row.assistanceTypes ?? [],
-    languages: row.languages ?? [],
-    lastVerified: dateOnly(row.lastVerified),
-  }));
+  const equipment: EquipmentItem[] = equipmentRows
+    .map((row) => ({
+      ...row,
+      estimatedPriceUsd: money(row.estimatedPriceUsd),
+      lastVerified: dateOnly(row.lastVerified),
+    }))
+    .filter((row) => row.verified && !row.simulated);
+  const caregivers: CaregiverService[] = caregiverRows
+    .map((row) => ({
+      ...row,
+      serviceArea: row.serviceArea ?? [],
+      assistanceTypes: row.assistanceTypes ?? [],
+      languages: row.languages ?? [],
+      lastVerified: dateOnly(row.lastVerified),
+    }))
+    .filter((row) => row.verified && !row.simulated);
   return { medical, equipment, caregivers };
 }
 

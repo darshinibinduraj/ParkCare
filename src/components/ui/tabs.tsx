@@ -54,10 +54,7 @@ export function SourceTabs() {
           </a>
           . Please read the original pages.
         </p>
-        <p>
-          Some product cards include an estimated price. Verified guidance has no price. A therapist should help you
-          choose any device.
-        </p>
+        <p>These cards are guidance only. They do not list a product or a price. A therapist should help you choose any device.</p>
       </Tabs.Content>
       <Tabs.Content value="caregiver" className="grid max-w-measure gap-3">
         <p>
@@ -71,10 +68,7 @@ export function SourceTabs() {
           </a>
           . They are public information services, not assigned caregivers.
         </p>
-        <p>
-          Local caregiver cards are listings to contact. Credentials, schedules, and prices on those cards were not
-          checked.
-        </p>
+        <p>ParkCare lists those public services only. It does not assign a local agency.</p>
       </Tabs.Content>
     </Tabs.Root>
   );
