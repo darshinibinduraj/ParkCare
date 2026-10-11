@@ -22,7 +22,7 @@ export async function POST(request: Request) {
       scenarioId = String(form.get("scenarioId") ?? "");
     }
     const scenario = scenarioById(scenarioId);
-    if (!scenario) return jsonError("That demo story was not found.", 400);
+    if (!scenario) return jsonError("That example story was not found.", 400);
     const sessionId = await createSession();
     for (const [questionKey, answerText] of Object.entries(scenario.answers)) {
       await upsertAnswer(sessionId, questionKey, answerText, false);

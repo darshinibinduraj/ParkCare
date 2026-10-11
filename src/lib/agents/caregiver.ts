@@ -35,7 +35,9 @@ export function runCaregiverAgent(profile: PatientProfile, services: CaregiverSe
   const national = services.filter((service) => service.verified && isNational(service.city));
   let local = services.filter(
     (service) =>
-      service.simulated &&
+      service.verified &&
+      !service.simulated &&
+      !isNational(service.city) &&
       overlap(service, profile) &&
       locationMatches(profile.location.cityOrZip, service),
   );
@@ -53,20 +55,18 @@ export function runCaregiverAgent(profile: PatientProfile, services: CaregiverSe
     keyFindings: [
       `${LIVING_LABEL[profile.livingSituation]}. Help needed: ${SUPPORT_LABEL[profile.supportNeeds]}.`,
       profile.location.cityOrZip
-        ? `Looking for example support near ${profile.location.cityOrZip}.`
+        ? `Looking for public support information near ${profile.location.cityOrZip}.`
         : "No city or ZIP, so only national public lookup services are listed.",
       profile.preferences.language
         ? `Language preference noted: ${profile.preferences.language}.`
         : "No language preference was provided.",
-      "Example agencies are simulated. National helplines are real public services. Availability was not checked.",
+      "Support options were not contacted. National helplines are public services. Availability was not checked.",
     ],
-    recommendations: chosen.map((service, index) => ({
+    recommendations: chosen.map((service) => ({
       resourceId: service.id,
       title: service.name,
-      why: service.verified
-        ? `${service.name} is a real public information service. It does not assign a caregiver. Ask them what is available near you.`
-        : `${service.name} is a fictional agency for the demo. It is tagged for this place and for ${SUPPORT_LABEL[profile.supportNeeds].toLowerCase()}. Ask any real agency about openings, cost, language, and training before you decide.`,
-      priority: service.simulated ? (index === 0 ? 1 : 2) : 3,
+      why: `${service.name} is a public information service. It does not assign a caregiver. Ask them what is available near you.`,
+      priority: 1,
     })),
     flagsForOtherAgents: [
       {
@@ -76,7 +76,7 @@ export function runCaregiverAgent(profile: PatientProfile, services: CaregiverSe
             ? "They live in a care community. Support should coordinate with that community, not assume a private home."
             : profile.livingSituation === "alone" && profile.falls.reported
               ? "This person lives alone and falls were reported. In-home support is worth discussing. Availability was not checked."
-              : "Support ideas are examples only. I did not confirm that anyone is available.",
+              : "These are public helplines. I did not confirm that a local agency is available.",
       },
       ...(profile.budget === "limited"
         ? [
@@ -93,9 +93,7 @@ export function runCaregiverAgent(profile: PatientProfile, services: CaregiverSe
       profile.preferences.caregiverGender
         ? `A preference for a ${profile.preferences.caregiverGender.toLowerCase()} caregiver was noted. Staff gender is not in the dataset, so it was not used as a filter.`
         : "Caregiver gender was not requested.",
-      profile.budget === "limited"
-        ? "Limited budget: higher-priced example agencies were hidden when a lower-cost example exists."
-        : "Published rates on simulated rows are examples, not quotes.",
+      "The listed services are public helplines. They do not quote an in-home rate.",
     ],
   });
 }

@@ -10,7 +10,7 @@ export const DEMO_SCENARIOS: DemoScenario[] = [
     id: "falls-alone",
     title: "Frequent falls, lives alone, limited budget",
     summary:
-      "Alex lives alone in Austin, falls often, and needs to keep costs low. Alex is fictional.",
+      "Alex lives alone in Austin, falls often, and needs to keep costs low.",
     answers: {
       q1: "Me",
       q2: "I don't know the stage.",
@@ -28,7 +28,7 @@ export const DEMO_SCENARIOS: DemoScenario[] = [
     id: "mild-tremor",
     title: "Mild tremor, family at home, flexible budget",
     summary:
-      "Jordan has a mild tremor, lives with family in Seattle, and has more room in the budget. Jordan is fictional.",
+      "Jordan has a mild tremor, lives with family in Seattle, and has more room in the budget.",
     answers: {
       q1: "Me",
       q2: "Early or mild",
@@ -45,7 +45,7 @@ export const DEMO_SCENARIOS: DemoScenario[] = [
     id: "care-facility",
     title: "Care community and frequent help",
     summary:
-      "Sam's father lives in a Chicago care community and needs help many times a day. This family is fictional.",
+      "Sam's father lives in a Chicago care community and needs help many times a day.",
     answers: {
       q1: "Someone I care for",
       q2: "Later or advanced",

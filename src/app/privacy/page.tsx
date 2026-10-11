@@ -27,7 +27,7 @@ export default async function PrivacyPage({
           be sent to Anthropic to fill the summary and rewrite explanations. Resource choices still come only from
           ParkCare&apos;s dataset. If no key is set, nothing is sent to an outside AI service.
         </p>
-        <p>Do not use real patient stories in this demo. Use fictional examples.</p>
+        <p>You do not need to use your name. A city or ZIP code is enough to look for nearby resources.</p>
       </section>
       <section className="grid gap-3">
         <h2 className="text-2xl font-bold">How long we keep it</h2>

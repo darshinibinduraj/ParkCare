@@ -53,7 +53,7 @@ export function buildComparisonNote(previous: CarePlan | null, next: CarePlan): 
     supportChanged
       ? `Help needed changed from ${SUPPORT_LABEL[previous.inputs.supportNeeds]} to ${SUPPORT_LABEL[next.inputs.supportNeeds]}.`
       : "",
-    placeChanged ? "The city or ZIP changed, so local examples were looked up again." : "",
+    placeChanged ? "The city or ZIP changed, so nearby public sources were looked up again." : "",
     added.length ? `Added: ${added.join("; ")}.` : "",
     removed.length ? `Removed: ${removed.join("; ")}.` : "",
   ].filter(Boolean);
@@ -153,7 +153,7 @@ export function synthesize(
       ...equipment.uncertainties,
       ...caregiver.uncertainties,
       DISCLAIMER,
-      "Simulated examples are fictional and for the demo only.",
+      "Confirm openings, prices, and credentials before you decide. ParkCare does not book visits or sell products.",
       "Verified rows link to a public source. ParkCare did not confirm that a person or product is available.",
     ]),
   ];
@@ -185,6 +185,6 @@ export function synthesizerMessage(): AgentMessage {
     recipients: ["medical", "equipment", "caregiver"],
     round: 3,
     content:
-      "I combined the medical, equipment, and caregiver findings into one ordered plan. Simulated examples stay labeled. Nothing here is a diagnosis or a prescription.",
+      "I combined the medical, equipment, and caregiver findings into one ordered plan. Nothing here is a diagnosis or a prescription.",
   };
 }

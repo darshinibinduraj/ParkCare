@@ -10,7 +10,7 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "tsx --test src/lib/questions.test.ts src/lib/extract.test.ts src/lib/agents/pipeline.test.ts src/lib/db/store.test.ts",
+    "test": "tsx --test src/lib/questions.test.ts src/lib/extract.test.ts src/lib/agents/pipeline.test.ts src/lib/db/store.test.ts src/lib/section-speech.test.ts src/lib/theme.test.ts",
     "db:export-seed": "tsx scripts/export-seed.ts",
     "db:seed": "tsx scripts/db-seed.ts",
     "db:generate": "drizzle-kit generate"

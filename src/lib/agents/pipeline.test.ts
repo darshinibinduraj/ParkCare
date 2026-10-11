@@ -55,8 +55,10 @@ test("seed rows are either verified or simulated, never both", () => {
     assert.equal(row.simulated, false, row.name);
     if (row.website) assert.match(row.website, /^https:\/\//, row.name);
   }
-  assert.ok(equipmentItems.length >= 15);
-  assert.ok(caregiverServices.length >= 10);
+  assert.ok(equipmentItems.length >= 7);
+  assert.ok(caregiverServices.length >= 2);
+  assert.equal(equipmentItems.some((item) => item.simulated), false);
+  assert.equal(caregiverServices.some((item) => item.simulated), false);
 });
 
 test("three fictional patients get a plan from all three helpers", () => {
@@ -95,17 +97,24 @@ test("equipment's home-safety note moves a community clinic ahead of a weaker si
   assert.ok(titles.indexOf(moved) >= 0 && shelter >= 0 && titles.indexOf(moved) < shelter);
 });
 
-test("budget changes which equipment and caregiver examples appear", () => {
+test("plans list only verified equipment guidance and public helplines", () => {
   const base = profileFor("falls-alone");
   const limited = createPlan(base, data, null).plan;
   const flexible = createPlan({ ...base, budget: "flexible" }, data, limited).plan;
-  const limitedNames = new Set(titles(limited, "equipment"));
-  assert.equal(limitedNames.has("Rolling walker"), false);
-  assert.equal(limitedNames.has("Shower chair"), false);
-  assert.ok(titles(flexible, "equipment").includes("Rolling walker"));
+  for (const plan of [limited, flexible]) {
+    for (const title of titles(plan, "equipment")) {
+      const row = equipmentItems.find((item) => item.name === title);
+      assert.equal(row?.verified, true, title);
+      assert.equal(row?.estimatedPriceUsd, null, title);
+    }
+    for (const title of titles(plan, "caregiver")) {
+      const row = caregiverServices.find((item) => item.name === title);
+      assert.equal(row?.verified, true, title);
+    }
+    assert.equal(titles(plan, "equipment").includes("Rolling walker"), false);
+    assert.equal(titles(plan, "caregiver").includes("Hill Country Home Care"), false);
+  }
   assert.match(flexible.comparisonNote ?? "", /Budget changed/);
-  assert.equal(titles(limited, "caregiver").includes("Hill Country Home Care"), false);
-  assert.ok(titles(flexible, "caregiver").includes("Hill Country Home Care"));
   const local = (plan: typeof limited) =>
     titles(plan, "medical").filter(
       (title) => title !== "CMS Doctors and Clinicians dataset" && title !== "HRSA Find a Health Center" && title !== "Parkinson's Foundation",

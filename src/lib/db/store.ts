@@ -52,6 +52,16 @@ export async function createSession(prefs?: { textSize?: string | null; theme?: 
   return id;
 }
 
+export async function sessionHasPlan(sessionId: string): Promise<boolean> {
+  const db = await getDb();
+  const rows = await db
+    .select({ id: agentRuns.id })
+    .from(agentRuns)
+    .where(and(eq(agentRuns.sessionId, sessionId), eq(agentRuns.status, "complete")))
+    .limit(1);
+  return rows.length > 0;
+}
+
 export async function getSession(id: string) {
   const db = await getDb();
   const rows = await db.select().from(sessions).where(eq(sessions.id, id)).limit(1);
@@ -175,18 +185,22 @@ async function loadDataset(): Promise<Dataset> {
       .filter((row) => !row.simulated),
     ...loadHrsaSites(),
   ];
-  const equipment: EquipmentItem[] = equipmentRows.map((row) => ({
-    ...row,
-    estimatedPriceUsd: money(row.estimatedPriceUsd),
-    lastVerified: dateOnly(row.lastVerified),
-  }));
-  const caregivers: CaregiverService[] = caregiverRows.map((row) => ({
-    ...row,
-    serviceArea: row.serviceArea ?? [],
-    assistanceTypes: row.assistanceTypes ?? [],
-    languages: row.languages ?? [],
-    lastVerified: dateOnly(row.lastVerified),
-  }));
+  const equipment: EquipmentItem[] = equipmentRows
+    .map((row) => ({
+      ...row,
+      estimatedPriceUsd: money(row.estimatedPriceUsd),
+      lastVerified: dateOnly(row.lastVerified),
+    }))
+    .filter((row) => row.verified && !row.simulated);
+  const caregivers: CaregiverService[] = caregiverRows
+    .map((row) => ({
+      ...row,
+      serviceArea: row.serviceArea ?? [],
+      assistanceTypes: row.assistanceTypes ?? [],
+      languages: row.languages ?? [],
+      lastVerified: dateOnly(row.lastVerified),
+    }))
+    .filter((row) => row.verified && !row.simulated);
   return { medical, equipment, caregivers };
 }
 
@@ -332,7 +346,7 @@ export async function getPlanView(sessionId: string): Promise<PlanView | null> {
       priceLabel:
         item.estimatedPriceUsd === null
           ? null
-          : `Simulated estimate: about $${item.estimatedPriceUsd}`,
+          : `Estimated price: about $${item.estimatedPriceUsd}`,
       source: item.source,
       verified: item.verified,
       simulated: item.simulated,

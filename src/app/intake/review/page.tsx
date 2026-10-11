@@ -3,22 +3,30 @@ import { redirect } from "next/navigation";
 import { Disclaimer } from "@/components/disclaimer";
 import { ReviewForm } from "@/components/intake/review-form";
 import { MainColumn } from "@/components/main-column";
-import { getSession, syncProfile } from "@/lib/db/store";
+import { ReloadIfRestored } from "@/components/intake/reload-if-restored";
+import { getSession, sessionHasPlan, syncProfile } from "@/lib/db/store";
 import { summaryLines } from "@/lib/copy";
 import { readSessionCookie } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Review" };
 
-export default async function ReviewPage() {
+export default async function ReviewPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ edit?: string }>;
+}) {
+  const params = await searchParams;
   const cookie = await readSessionCookie();
   const session = cookie ? await getSession(cookie) : null;
   if (!session) redirect("/intake");
+  if (params.edit !== "1" && (await sessionHasPlan(session.id))) redirect("/api/session/restart");
   const profile = await syncProfile(session.id);
   const lines = summaryLines(profile);
 
   return (
     <MainColumn className="grid gap-6">
+      <ReloadIfRestored />
       <div className="grid max-w-measure gap-3">
         <h1 className="text-4xl font-bold">Here is what we understood</h1>
         <p>Please correct anything that is wrong before the helpers run. Unknown items show as not provided.</p>

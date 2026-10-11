@@ -53,7 +53,7 @@ export default async function ResultsPage({ params }: { params: Promise<{ sessio
     return (
       <MainColumn className="grid gap-4">
         <h1 className="text-4xl font-bold">No plan yet</h1>
-        <p>This session does not have a care plan. Start the intake or pick a demo story.</p>
+        <p>This session does not have a care plan. Start the intake or try an example story.</p>
         <Link className="inline-flex min-h-14 items-center underline" href="/intake">
           Start
         </Link>
@@ -157,7 +157,7 @@ export default async function ResultsPage({ params }: { params: Promise<{ sessio
             </button>
           </form>
           <p>
-            <Link className="inline-flex min-h-14 items-center underline" href="/intake/review">
+            <Link className="inline-flex min-h-14 items-center underline" href="/intake/review?edit=1">
               Edit the full summary
             </Link>
           </p>

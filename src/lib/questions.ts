@@ -75,14 +75,14 @@ export const QUESTIONS: Question[] = [
   {
     key: "q8",
     prompt: "What city or ZIP code are you in?",
-    help: "We use this only to look for example resources in the demo dataset. A city or a ZIP code is enough.",
+    help: "A city or a ZIP code is enough. We use it to look for resources near you.",
     kind: "text",
     chips: ["I'd rather not say"],
   },
   {
     key: "q9",
     prompt: "How are you thinking about costs? A rough idea is fine.",
-    help: "This changes which example products and support options we show. It is not a bill.",
+    help: "This can change which lower-cost public options we put first. It is not a bill.",
     kind: "text",
     chips: ["Keeping costs low", "A middle range", "More flexibility", "I'm not sure"],
   },

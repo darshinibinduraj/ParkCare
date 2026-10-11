@@ -17,10 +17,13 @@ export default async function HomePage({
           Your saved answers and plan were deleted from this device.
         </p>
       ) : null}
+      <p className="rounded-2xl border-2 border-primary bg-primary px-6 py-6 text-4xl font-bold text-on-primary">
+        Welcome to ParkCare!
+      </p>
       <div className="grid max-w-measure gap-4">
         <h1 className="text-4xl font-bold">Sort out next steps for Parkinson&apos;s care</h1>
         <p className="text-lead">
-          Tell us what is going on, in your own words. Three helpers compare notes and give you one plan. It is
+          Tell us what is going on, in your own words. Three agents compare notes and give you one plan. It is
           information, not a diagnosis.
         </p>
       </div>
@@ -29,21 +32,21 @@ export default async function HomePage({
           <Link href="/intake">Start</Link>
         </Button>
         <Button asChild variant="secondary">
-          <Link href="/demo">Try a demo story</Link>
+          <Link href="/">Home</Link>
         </Button>
       </div>
       <div className="grid gap-4">
         <Card>
-          <h2 className="text-2xl font-bold">Medical helper</h2>
-          <p>Looks at movement changes, falls, and place. Points to public directories and clearly labeled examples.</p>
+          <h2 className="text-2xl font-bold">Medical agent</h2>
+          <p>Looks at movement changes, falls, and place. Points to public directories and health center sites.</p>
         </Card>
         <Card>
-          <h2 className="text-2xl font-bold">Equipment helper</h2>
-          <p>Suggests home-safety ideas and daily-living tools. It does not prescribe a device or invent a price.</p>
+          <h2 className="text-2xl font-bold">Equipment agent</h2>
+          <p>Shares home-safety and daily-living guidance from public sources. It does not prescribe a device or invent a price.</p>
         </Card>
         <Card>
-          <h2 className="text-2xl font-bold">Caregiver helper</h2>
-          <p>Matches support needs, home life, and budget to example services and real public helplines.</p>
+          <h2 className="text-2xl font-bold">Caregiver agent</h2>
+          <p>Matches support needs and home life to public helplines. It does not assign a caregiver.</p>
         </Card>
       </div>
       <section className="grid max-w-measure gap-3">
@@ -53,7 +56,7 @@ export default async function HomePage({
           <li>Check what we understood. Fix anything we got wrong.</li>
           <li>Read one plan with next steps, sources, and caveats.</li>
         </ol>
-        <p>The helpers read the same story, then leave notes for each other before the plan is written.</p>
+        <p>The agents read the same story, then leave notes for each other before the plan is written.</p>
       </section>
       <section className="grid max-w-measure gap-3">
         <h2 className="text-2xl font-bold">Privacy in short</h2>
