@@ -9,7 +9,7 @@ type Recognition = {
   interimResults: boolean;
   onresult: ((event: { resultIndex: number; results: ArrayLike<ArrayLike<{ transcript: string }> & { isFinal: boolean }> }) => void) | null;
   onend: (() => void) | null;
-  onerror: (() => void) | null;
+  onerror: ((event: { error?: string }) => void) | null;
   start: () => void;
   stop: () => void;
 };
@@ -27,14 +27,41 @@ export function VoiceInput() {
   const [listening, setListening] = useState(false);
   const [status, setStatus] = useState("");
   const recognitionRef = useRef<Recognition | null>(null);
+  const wantListenRef = useRef(false);
+  const restartTimer = useRef<number | null>(null);
 
   useEffect(() => {
     setSupported(recognitionCtor() !== null);
+    return () => {
+      wantListenRef.current = false;
+      if (restartTimer.current !== null) window.clearTimeout(restartTimer.current);
+      recognitionRef.current?.stop();
+    };
   }, []);
 
+  function clearRestart() {
+    if (restartTimer.current !== null) {
+      window.clearTimeout(restartTimer.current);
+      restartTimer.current = null;
+    }
+  }
+
+  function resume(recognition: Recognition) {
+    if (!wantListenRef.current) return;
+    try {
+      recognition.start();
+      setStatus("Listening. Tap to stop when you are done.");
+    } catch {
+      restartTimer.current = window.setTimeout(() => resume(recognition), 300);
+    }
+  }
+
   function stop() {
+    wantListenRef.current = false;
+    clearRestart();
     recognitionRef.current?.stop();
     setListening(false);
+    setStatus("");
   }
 
   function start() {
@@ -44,9 +71,11 @@ export function VoiceInput() {
       setStatus("Voice input is not available in this browser. You can type instead.");
       return;
     }
+    wantListenRef.current = true;
+    clearRestart();
     const recognition = new Ctor();
     recognition.lang = "en-US";
-    recognition.continuous = false;
+    recognition.continuous = true;
     recognition.interimResults = true;
     recognition.onresult = (event) => {
       let finalText = "";
@@ -61,16 +90,32 @@ export function VoiceInput() {
         textarea.value = textarea.value.trim() ? `${textarea.value.trim()} ${addition}` : addition;
         textarea.dispatchEvent(new Event("input", { bubbles: true }));
       }
-      setStatus(interim ? `Hearing: ${interim}` : "Listening. Speak now.");
+      setStatus(interim ? `Hearing: ${interim}` : "Listening. Tap to stop when you are done.");
     };
-    recognition.onerror = () => {
-      setListening(false);
-      setStatus("Voice input stopped. You can type instead.");
+    recognition.onerror = (event) => {
+      const code = event.error ?? "";
+      if (code === "not-allowed" || code === "service-not-allowed" || code === "audio-capture") {
+        wantListenRef.current = false;
+        clearRestart();
+        setListening(false);
+        setStatus(
+          code === "audio-capture"
+            ? "No microphone was found. You can type instead."
+            : "Microphone permission is off. You can type instead.",
+        );
+      }
     };
-    recognition.onend = () => setListening(false);
+    recognition.onend = () => {
+      if (!wantListenRef.current) {
+        setListening(false);
+        return;
+      }
+      clearRestart();
+      restartTimer.current = window.setTimeout(() => resume(recognition), 250);
+    };
     recognitionRef.current = recognition;
     setListening(true);
-    setStatus("Listening. Speak now.");
+    setStatus("Listening. Tap to stop when you are done.");
     recognition.start();
   }
 
@@ -81,7 +126,7 @@ export function VoiceInput() {
   return (
     <div className="grid gap-2">
       <Button type="button" variant="secondary" aria-pressed={listening} onClick={() => (listening ? stop() : start())}>
-        {listening ? "Stop listening" : "Tap to speak"}
+        {listening ? "Tap to stop" : "Tap to speak"}
       </Button>
       <p role="status" aria-live="polite">
         {status}

@@ -18,7 +18,7 @@ export function HelpDialog() {
           </Dialog.Description>
           <ul className="mt-4 grid list-disc gap-3 pl-6">
             <li>One question shows at a time. Go back whenever you want.</li>
-            <li>Type, tap a short answer, or use Tap to speak. Voice is optional.</li>
+            <li>Type, tap a short answer, or use Tap to speak. It keeps listening until you tap to stop. Voice is optional.</li>
             <li>You can edit the speech text. Recognition can miss soft speech.</li>
             <li>Skip any question. There is no timer.</li>
             <li>Answers are saved on this device as you go.</li>
